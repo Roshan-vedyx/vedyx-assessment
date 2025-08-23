@@ -1,280 +1,402 @@
-// src/app/page.tsx - PREMIUM LANDING PAGE
 'use client'
 
-import { Button } from '@/components/ui/Button'
+import React from 'react'
 import { motion } from 'framer-motion'
-import { Brain, Clock, Users, CheckCircle, ArrowRight, Star, Award, Shield } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { Card, CardContent } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
+import { CheckCircle, Brain, FileText, TrendingUp, Shield, Award, Users, Clock, Star, ArrowRight, Clipboard, Target } from 'lucide-react'
+import Link from 'next/link'
 
 export default function LandingPage() {
-  const router = useRouter()
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">Learning Assessment Center</h1>
+                <p className="text-sm text-slate-600">Evidence-Based Educational Evaluation</p>
+              </div>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Vedyx Leap
-            </span>
+            <div className="hidden md:flex items-center space-x-6 text-sm text-slate-600">
+              <div className="flex items-center">
+                <Shield className="w-4 h-4 mr-1" />
+                <span>COPPA Compliant</span>
+              </div>
+              <div className="flex items-center">
+                <Award className="w-4 h-4 mr-1" />
+                <span>Research-Based</span>
+              </div>
+            </div>
           </div>
-          <Button 
-            onClick={() => router.push('/form')}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg"
-          >
-            Start Assessment
-          </Button>
         </div>
-      </nav>
+      </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 text-sm font-medium mb-8">
-              <Award className="w-4 h-4 mr-2" />
-              Research-backed assessment used by 10,000+ families
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8">
-              <span className="text-gray-900">Unlock Your Child's</span>
-              <br />
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Learning Superpower
-              </span>
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Discover your child's unique learning style with our scientifically-designed assessment. 
-              Get personalized strategies that transform struggling readers into confident learners.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-              <Button
-                size="lg"
-                onClick={() => router.push('/form')}
-                className="px-10 py-4 text-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200"
-              >
-                Get My Child's Profile
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <div className="flex items-center text-gray-600">
-                <Clock className="w-5 h-5 mr-2 text-indigo-500" />
-                <span className="font-medium">5 minutes • Ages 11-14 • 100% Free</span>
+      <section className="py-16 sm:py-20 lg:py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div>
+              <div className="bg-blue-600 p-4 rounded-full w-fit mx-auto mb-8">
+                <Clipboard className="w-10 h-10 text-white" />
               </div>
-            </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+                Understand Your Child's
+                <span className="block text-blue-600">Learning Style</span>
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                A comprehensive, research-based assessment that identifies your child's unique learning preferences and provides evidence-backed educational strategies.
+              </p>
 
-            {/* Trust indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-8 text-gray-500 text-sm">
-              <div className="flex items-center">
-                <Shield className="w-4 h-4 mr-2" />
-                Privacy Protected
-              </div>
-              <div className="flex items-center">
-                <Star className="w-4 h-4 mr-2 text-yellow-500" />
-                4.9/5 Parent Rating
-              </div>
-              <div className="flex items-center">
-                <Users className="w-4 h-4 mr-2" />
-                10,000+ Children Assessed
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Results Preview */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-indigo-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              See What Parents Discover
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get a comprehensive learning profile that reveals your child's strengths and shows exactly how to support their growth.
-            </p>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <div className="bg-white rounded-2xl shadow-2xl p-8">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-4">
-                    <Brain className="w-6 h-6 text-white" />
+              <div className="bg-white p-6 rounded-lg shadow-md mb-12 max-w-2xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                  <div className="flex flex-col items-center">
+                    <div className="bg-green-100 p-3 rounded-full mb-2">
+                      <Clock className="w-6 h-6 text-green-700" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-900">5-7 Minutes</span>
+                    <span className="text-xs text-slate-600">Quick Assessment</span>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Sarah's Learning Profile</h3>
-                    <p className="text-gray-600">Visual + Kinesthetic Learner</p>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-blue-100 p-3 rounded-full mb-2">
+                      <FileText className="w-6 h-6 text-blue-700" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-900">Detailed Report</span>
+                    <span className="text-xs text-slate-600">Emailed Instantly</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-purple-100 p-3 rounded-full mb-2">
+                      <Shield className="w-6 h-6 text-purple-700" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-900">Completely Free</span>
+                    <span className="text-xs text-slate-600">No Hidden Costs</span>
                   </div>
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Visual Learning</span>
-                    <div className="flex items-center">
-                      <div className="w-32 h-2 bg-gray-200 rounded-full mr-3">
-                        <div className="w-28 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-medium">90%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Hands-On Learning</span>
-                    <div className="flex items-center">
-                      <div className="w-32 h-2 bg-gray-200 rounded-full mr-3">
-                        <div className="w-24 h-2 bg-gradient-to-r from-green-500 to-teal-500 rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-medium">75%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Auditory Learning</span>
-                    <div className="flex items-center">
-                      <div className="w-32 h-2 bg-gray-200 rounded-full mr-3">
-                        <div className="w-16 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
-                      </div>
-                      <span className="text-sm font-medium">50%</span>
-                    </div>
-                  </div>
-                </div>
+              </div>
 
-                <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
-                  <p className="text-sm text-gray-700">
-                    <strong>Key Insight:</strong> Sarah learns best with colorful charts and hands-on activities. 
-                    Try mind mapping and visual organizers for reading comprehension.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-indigo-500">
-                <h4 className="font-semibold text-gray-900 mb-2">Personalized Strategies</h4>
-                <p className="text-gray-600">Get specific, actionable recommendations tailored to your child's learning style.</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-                <h4 className="font-semibold text-gray-900 mb-2">Strength-Based Approach</h4>
-                <p className="text-gray-600">Focus on what your child does well, then build from their natural abilities.</p>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pink-500">
-                <h4 className="font-semibold text-gray-900 mb-2">Next Steps Plan</h4>
-                <p className="text-gray-600">Clear guidance on activities and resources that match your child's profile.</p>
-              </div>
-            </motion.div>
+              <Link href="/assessment" prefetch={true}>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl font-bold min-h-[60px] shadow-lg transform hover:scale-105 transition-all duration-200"
+                >
+                  Start Free Assessment
+                  <ArrowRight className="w-6 h-6 ml-2" />
+                </Button>
+              </Link>
+              
+              <p className="text-sm text-slate-500 mt-4">
+                Trusted by over 10,000 families • No registration required • Instant results
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Trusted by Parents Everywhere
+      {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+              Comprehensive Learning Profile Analysis
             </h2>
-          </motion.div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Our assessment is grounded in established educational research and provides actionable insights for parents and educators.
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                quote: "Finally understood why traditional methods weren't working for Emma. The visual strategies transformed her reading confidence in just 2 weeks.",
-                author: "Michelle K., Mother of 12-year-old",
-                rating: 5
-              },
-              {
-                quote: "The assessment revealed my son's kinesthetic learning style. Now homework is actually enjoyable with the hands-on approaches they suggested.",
-                author: "David R., Father of 11-year-old", 
-                rating: 5
-              },
-              {
-                quote: "As a teacher and parent, I was impressed by the depth and accuracy of the assessment. It gave me tools I use both at home and in my classroom.",
-                author: "Sarah M., Teacher & Mother",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-xl shadow-lg p-6"
-              >
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                  ))}
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="bg-green-100 p-3 rounded-full w-fit mb-4">
+                  <Brain className="w-6 h-6 text-green-700" />
                 </div>
-                <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
-                <p className="text-sm text-gray-600 font-medium">{testimonial.author}</p>
-              </motion.div>
-            ))}
+                <h3 className="text-xl font-semibold text-slate-900 mb-3">Learning Style Identification</h3>
+                <p className="text-slate-600 mb-4">
+                  Determines whether your child learns best through visual, auditory, kinesthetic, or reading/writing methods.
+                </p>
+                <ul className="text-sm text-slate-600 space-y-1">
+                  <li>• Primary learning modality analysis</li>
+                  <li>• Secondary preference identification</li>
+                  <li>• Personalized learning recommendations</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="bg-blue-100 p-3 rounded-full w-fit mb-4">
+                  <Target className="w-6 h-6 text-blue-700" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 mb-3">Cognitive Pattern Recognition</h3>
+                <p className="text-slate-600 mb-4">
+                  Identifies attention patterns, focus preferences, and processing styles that may indicate neurodivergent traits.
+                </p>
+                <ul className="text-sm text-slate-600 space-y-1">
+                  <li>• Attention span analysis</li>
+                  <li>• Focus pattern identification</li>
+                  <li>• Sensory processing insights</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="bg-purple-100 p-3 rounded-full w-fit mb-4">
+                  <TrendingUp className="w-6 h-6 text-purple-700" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 mb-3">Strength-Based Assessment</h3>
+                <p className="text-slate-600 mb-4">
+                  Identifies your child's unique cognitive strengths and natural abilities to build upon.
+                </p>
+                <ul className="text-sm text-slate-600 space-y-1">
+                  <li>• Creative thinking assessment</li>
+                  <li>• Pattern recognition skills</li>
+                  <li>• Social connection abilities</li>
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Your Child's Learning Journey Starts Here
-            </h2>
-            <p className="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">
-              Join thousands of parents who've unlocked their child's potential. 
-              Get your personalized learning profile in just 5 minutes.
-            </p>
-            <Button
-              size="lg"
-              onClick={() => router.push('/form')}
-              className="px-12 py-4 text-lg bg-white text-indigo-600 hover:bg-gray-50 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-200"
+      {/* Social Proof Section */}
+      <section className="py-16 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Trusted by Families Worldwide</h2>
+            <div className="flex items-center justify-center space-x-8 text-slate-600">
+              <div className="flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                <span className="font-semibold">10,000+ Assessments</span>
+              </div>
+              <div className="flex items-center">
+                <Star className="w-5 h-5 mr-2 text-yellow-500" />
+                <span className="font-semibold">4.8/5 Rating</span>
+              </div>
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                <span className="font-semibold">Privacy Protected</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="p-6 bg-white border-0 shadow-md">
+              <CardContent>
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-slate-700 mb-4 italic">
+                  "This assessment helped us understand why traditional teaching methods weren't working for our son. The recommendations were spot-on."
+                </p>
+                <p className="text-sm text-slate-600">— Sarah M., Parent</p>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 bg-white border-0 shadow-md">
+              <CardContent>
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-slate-700 mb-4 italic">
+                  "As a teacher, I found this assessment incredibly valuable for understanding my students' learning needs. Very professional."
+                </p>
+                <p className="text-sm text-slate-600">— Jennifer L., Elementary Teacher</p>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 bg-white border-0 shadow-md">
+              <CardContent>
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-slate-700 mb-4 italic">
+                  "The detailed report gave us concrete strategies to help our daughter succeed. We shared it with her school team too."
+                </p>
+                <p className="text-sm text-slate-600">— Michael R., Parent</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* What You'll Receive Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">What You'll Receive</h2>
+            <p className="text-lg text-slate-600">A comprehensive report delivered instantly to your email</p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2 items-center">
+            <div className="space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-2">Detailed Learning Style Analysis</h3>
+                  <p className="text-slate-600">Complete breakdown of your child's primary and secondary learning preferences with specific examples.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-green-100 p-2 rounded-full flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-2">Evidence-Based Strategies</h3>
+                  <p className="text-slate-600">Actionable recommendations grounded in current educational research and UDL principles.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-purple-100 p-2 rounded-full flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-2">Professional Summary</h3>
+                  <p className="text-slate-600">Formatted report suitable for sharing with teachers, tutors, and educational specialists.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-orange-100 p-2 rounded-full flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-2">Next Steps Guide</h3>
+                  <p className="text-slate-600">Clear action items and resources to implement the recommendations immediately.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 p-8 rounded-lg">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <FileText className="w-6 h-6 text-blue-600 mr-2" />
+                  <h4 className="font-semibold text-slate-900">Sample Report Preview</h4>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <p className="font-medium text-slate-900">Primary Learning Style: Visual</p>
+                    <p className="text-slate-600">Emma processes information most effectively through visual channels...</p>
+                  </div>
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <p className="font-medium text-slate-900">Key Strengths: Pattern Recognition</p>
+                    <p className="text-slate-600">Shows exceptional ability to identify and understand patterns...</p>
+                  </div>
+                  <div className="border-l-4 border-purple-500 pl-3">
+                    <p className="font-medium text-slate-900">Recommendations:</p>
+                    <p className="text-slate-600">• Use mind maps for studying • Create visual schedules...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-blue-600">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+            Ready to Understand Your Child's Learning Style?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of parents who have discovered their child's unique learning needs through our research-based assessment.
+          </p>
+          
+          <Link href="/assessment" prefetch={true}>
+            <Button 
+              className="bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 text-xl font-bold min-h-[60px] shadow-lg transform hover:scale-105 transition-all duration-200"
             >
-              Start Your Child's Assessment
-              <ArrowRight className="w-5 h-5 ml-2" />
+              Begin Assessment Now
+              <ArrowRight className="w-6 h-6 ml-2" />
             </Button>
-            <p className="text-indigo-200 text-sm mt-4">
-              No signup required • Results in 5 minutes • 100% Free
-            </p>
-          </motion.div>
+          </Link>
+          
+          <p className="text-sm text-blue-200 mt-4">
+            5-7 minutes • Completely free • Instant results • No registration required
+          </p>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Brain className="w-6 h-6 text-blue-400" />
+                <span className="font-bold text-lg">Learning Assessment</span>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Evidence-based educational assessments to help every child reach their potential.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Assessment</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>Learning Styles</li>
+                <li>Cognitive Patterns</li>
+                <li>Strength Analysis</li>
+                <li>Professional Reports</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>How It Works</li>
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
+                <li>Contact Us</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Trust & Safety</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li>COPPA Compliant</li>
+                <li>Data Protection</li>
+                <li>Research-Based</li>
+                <li>Educational Use</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-slate-800 pt-8 mt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-slate-400 text-sm">
+                © 2024 Learning Assessment Center. All rights reserved.
+              </p>
+              <div className="text-xs text-slate-500 mt-4 md:mt-0">
+                <p>This assessment provides educational insights and is not a diagnostic tool.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
