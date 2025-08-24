@@ -96,7 +96,11 @@ export function FormStep({ onSubmit }: FormStepProps) {
                     <Input
                       type="text"
                       value={childName}
-                      onChange={(e) => setChildName(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+                        setChildName(capitalizedValue)
+                      }}
                       placeholder="Enter first name"
                       className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500/20 rounded-xl"
                       required
