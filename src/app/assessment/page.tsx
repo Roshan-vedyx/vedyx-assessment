@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { db } from '@/lib/firebase'
 import { collection, addDoc } from 'firebase/firestore'
+import { ResultsSection } from '@/components/assessment/ResultsSection'
 import { ChevronRight, ArrowLeft, ArrowRight, CheckCircle, Brain, Target, AlertCircle, Clipboard, FileText, TrendingUp, Shield, Award } from 'lucide-react'
 
 // New 12-question assessment with multi-dimensional scoring
@@ -871,217 +872,25 @@ export default function AssessmentPage() {
   }
 
   // Results Step
-  if (step === 'results' && results) {
-    const { childName, parentEmail } = formData
-    
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <Card className="shadow-xl border-0">
-            <CardContent className="p-8">
-              <div className="text-center mb-8">
-                <div className="bg-green-100 p-4 rounded-full w-fit mx-auto mb-4">
-                  <Award className="w-8 h-8 text-green-600" />
-                </div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">
-                  {childName}'s Learning Profile
-                </h1>
-                <p className="text-lg text-slate-600">
-                  Comprehensive multi-dimensional assessment results
-                </p>
-              </div>
-
-              {/* Primary Learning Profile */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-8">
-                <div className="flex items-center mb-4">
-                  <Brain className="w-6 h-6 text-blue-600 mr-3" />
-                  <h2 className="text-xl font-semibold text-slate-900">{results.profile?.title || "Learning Profile"}</h2>
-                </div>
-                <p className="text-lg text-slate-700 mb-4">{results.profile?.description || `${childName} shows a unique learning pattern.`}</p>
-                
-                <h3 className="font-semibold text-slate-900 mb-3">Key Strengths:</h3>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {(results.profile?.strengths || []).map((strength: string, index: number) => (
-                    <div key={index} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base text-slate-700">{strength}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Executive Function Supports */}
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-8">
-                <div className="flex items-center mb-4">
-                  <Target className="w-5 h-5 text-purple-600 mr-2" />
-                  <h3 className="font-semibold text-lg text-slate-900">Executive Function Support Strategies</h3>
-                </div>
-                <p className="text-slate-700 mb-4">
-                  Based on {childName}'s responses, these organizational and self-regulation strategies will be most effective:
-                </p>
-                <ul className="space-y-3">
-                  {(results.executiveSupports?.supports || []).map((support: string, index: number) => (
-                    <li key={index} className="flex items-start">
-                      <Shield className="w-4 h-4 text-purple-600 mr-3 mt-1 flex-shrink-0" />
-                      <span className="text-sm sm:text-base text-slate-700">{support}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Motivational Drivers */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-                <div className="flex items-center mb-4">
-                  <TrendingUp className="w-5 h-5 text-green-600 mr-2" />
-                  <h3 className="font-semibold text-lg text-slate-900">What Motivates {childName} to Learn</h3>
-                </div>
-                <p className="text-slate-700 mb-4">
-                  These approaches will help maintain {childName}'s engagement and enthusiasm for learning:
-                </p>
-                <ul className="space-y-3">
-                  {(results.motivationalDrivers?.motivators || []).map((motivator: string, index: number) => (
-                    <li key={index} className="flex items-start">
-                      <Award className="w-4 h-4 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                      <span className="text-sm sm:text-base text-slate-700">{motivator}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Action Steps - Immediate Value */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
-                <div className="flex items-center mb-4">
-                  <CheckCircle className="w-5 h-5 text-yellow-600 mr-2" />
-                  <h3 className="font-semibold text-lg text-slate-900">Start These Strategies Today</h3>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium text-slate-900 mb-2">🏠 At Home:</h4>
-                    <ul className="text-sm text-slate-700 space-y-1">
-                      {(results.recommendations?.immediate || []).slice(0, 3).map((rec: string, index: number) => (
-                        <li key={index}>• {rec}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-slate-900 mb-2">🏫 Share with Teachers:</h4>
-                    <ul className="text-sm text-slate-700 space-y-1">
-                      {(results.recommendations?.academic || []).slice(0, 3).map((rec: string, index: number) => (
-                        <li key={index}>• {rec}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Neurodivergent Considerations */}
-              {results.neurodivergentConsiderations && results.neurodivergentConsiderations.length > 0 && (
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-8">
-                  <div className="flex items-center mb-4">
-                    <Brain className="w-5 h-5 text-orange-600 mr-2" />
-                    <h3 className="font-semibold text-lg text-slate-900">Additional Learning Insights</h3>
-                  </div>
-                  <p className="text-slate-700 mb-4">
-                    The assessment indicates some patterns worth noting:
-                  </p>
-                  <ul className="space-y-3">
-                    {results.neurodivergentConsiderations.map((insight: string, index: number) => (
-                      <li key={index} className="flex items-start">
-                        <Target className="w-4 h-4 text-orange-600 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-sm sm:text-base text-slate-700">{insight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="bg-white border border-orange-200 rounded p-4 mt-4">
-                    <p className="text-xs text-slate-600 font-medium">
-                      Professional Disclaimer: This assessment provides educational insights and is not a clinical diagnosis. 
-                      For comprehensive evaluation of learning differences, consult qualified educational or medical professionals.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Email Confirmation - Now positioned after the main insights */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-                <div className="flex items-center mb-4">
-                  <FileText className="w-5 h-5 text-blue-600 mr-2" />
-                  <h3 className="font-semibold text-xl text-slate-900">Get Your Complete Detailed Report</h3>
-                </div>
-                <p className="text-slate-700 mb-4">
-                  While the insights above give you immediate actionable strategies, we're also sending a 
-                  comprehensive detailed report with expanded recommendations to <span className="font-semibold">{parentEmail}</span>
-                </p>
-                <div className="bg-white border border-blue-200 rounded p-4">
-                  <p className="text-sm text-blue-800 font-medium">Your detailed email report includes:</p>
-                  <ul className="text-sm text-blue-700 mt-2 space-y-1">
-                    <li>• Extended analysis of {childName}'s complete learning profile</li>
-                    <li>• Specific classroom accommodation recommendations for teachers</li>
-                    <li>• Home learning environment setup guide</li>
-                    <li>• Professional summary suitable for educational consultations</li>
-                    <li>• Research references supporting the recommendations</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Call to Action */}
-              <div className="text-center bg-slate-50 p-6 rounded-lg">
-                <h3 className="font-semibold text-lg text-slate-900 mb-3">
-                  Ready to Support {childName}'s Learning Journey?
-                </h3>
-                <p className="text-slate-600 mb-4">
-                  Explore our research-based learning tools designed specifically for {childName}'s learning style.
-                </p>
-                <Button 
-                  onClick={() => {
-                    trackEvent('app_trial_clicked')
-                    window.location.href = `/?source=assessment&type=${results.primaryLearningStyle}`
-                  }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 text-lg font-semibold shadow-md"
-                >
-                  Explore Personalized Learning Resources
-                </Button>
-                <p className="text-xs text-slate-500 mt-3 text-center">
-                  Research-based learning tools • No commitment required
-                </p>
-              </div>
-
-              <div className="text-center bg-slate-50 p-4 rounded-lg mt-4">
-                <p className="text-sm text-slate-600 italic">
-                  "This assessment helped us understand our child's learning needs much better."
-                </p>
-                <p className="text-xs text-slate-500 mt-1">— Parent testimonial</p>
-              </div>
-
-              <div className="text-center text-xs sm:text-sm text-slate-500 space-y-2 mt-8">
-                <p>A detailed report has been sent to {parentEmail}</p>
-                <p>Feel free to share insights with teachers for classroom support</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="text-xs text-slate-500 mt-8 border-t pt-4 text-left">
-            <p className="font-bold text-red-700 mb-2">Important:</p>
-            <ul className="list-disc list-inside space-y-2 text-red-700">
-              <li>
-                This assessment provides insights about learning preferences and is not a medical or educational diagnosis.
-              </li>
-              <li>
-                For concerns about learning differences or development, please consult your child's pediatrician or a licensed educational professional.
-              </li>
-              <li>
-                Results are based on current research in learning styles and neurodevelopment. Individual children may vary.
-              </li>
-            </ul>
-          </div>
-        </motion.div>
-      </div>
-    )
-  }
+if (step === 'results' && results) {
+  return (
+    <ResultsSection 
+      results={results}
+      formData={formData}
+      onEmailResults={() => {
+        // Any email tracking logic if needed
+        console.log('Email results requested for:', formData.parentEmail)
+        // Add any analytics tracking here
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'email_results_requested', {
+            event_category: 'assessment',
+            event_label: 'detailed_report'
+          })
+        }
+      }}
+    />
+  )
+}
 
   return null
 }
