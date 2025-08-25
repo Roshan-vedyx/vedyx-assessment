@@ -270,7 +270,7 @@ export function ResultsSection({ results, formData, onEmailResults }: ResultsSec
                   <FileText className="w-8 h-8 text-orange-600 mr-4" />
                   <div>
                     <h2 className="text-2xl font-bold text-slate-900">
-                      Comprehensive Professional Report
+                      Comprehensive Learning Report
                     </h2>
                     <p className="text-orange-700 font-medium">
                       Detailed analysis emailed to {parentEmail}
