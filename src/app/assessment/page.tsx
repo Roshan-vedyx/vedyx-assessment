@@ -493,12 +493,14 @@ export default function AssessmentPage() {
     }
   
     try {
-      // Save to Firebase
-      await addDoc(collection(db, 'assessments'), {
-        ...finalResults,
-        sessionId: `assessment_${Date.now()}`,
-        completedAt: new Date()
-      })
+      // Save to Firebase (only if db is available)
+      if (db) {
+        await addDoc(collection(db, 'assessments'), {
+          ...finalResults,
+          sessionId: `assessment_${Date.now()}`,
+          completedAt: new Date()
+        })
+      }
   
       // 🆕 ADD THIS: Send detailed email report
       try {

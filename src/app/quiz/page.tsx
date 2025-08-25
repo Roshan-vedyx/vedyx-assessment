@@ -52,21 +52,23 @@ export default function QuizPage() {
       }])
 
       // Save to Firestore
-      try {
-        await addDoc(collection(db, 'assessments'), {
-          sessionId,
-          formData,
-          answers: [...answers, {
-            questionId: question.id,
-            answer: selectedAnswer!,
-            timestamp: new Date()
-          }],
-          results,
-          completedAt: new Date(),
-          source: 'microsite'
-        })
-      } catch (error) {
-        console.error('Error saving assessment:', error)
+      if (db) {
+        try {
+          await addDoc(collection(db, 'assessments'), {
+            sessionId,
+            formData,
+            answers: [...answers, {
+              questionId: question.id,
+              answer: selectedAnswer!,
+              timestamp: new Date()
+            }],
+            results,
+            completedAt: new Date(),
+            source: 'microsite'
+          })
+        } catch (error) {
+          console.error('Error saving assessment:', error)
+        }
       }
 
       // Store results and redirect
