@@ -549,24 +549,49 @@ export default function AssessmentPage() {
 
   const sendDetailedEmailReport = async (results: any) => {
     try {
-      const detailedReport = generateDetailedReport(results)
+      // Fix: Get primary learning style from results correctly
+      const primaryStyle = results.profile?.primaryLearningStyle || 
+                          results.primaryLearningStyle || 
+                          'Visual' // fallback
+  
+      const reportData = {
+        childName: results.formData.childName,
+        childAge: results.formData.childAge,
+        primaryLearningStyle: primaryStyle, // Fixed this line
+        scores: results.scores,
+        recommendations: [
+          `Focus on ${primaryStyle.toLowerCase()} learning activities`,
+          'Implement multi-sensory approaches when possible',
+          'Create structured learning environments',
+          'Use positive reinforcement strategies',
+          'Break complex tasks into smaller steps'
+        ],
+        strategies: [
+          'Use visual aids and graphic organizers for better comprehension',
+          'Incorporate movement and hands-on activities',
+          'Provide clear, step-by-step instructions',
+          'Allow extra processing time when needed',
+          'Create consistent daily routines'
+        ]
+      }
       
-      const response = await fetch('/api/send-report', {
+      const response = await fetch('/api/send-pdf-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: results.formData.parentEmail,
           childName: results.formData.childName,
-          childAge: results.formData.childAge,
-          report: detailedReport
+          reportData
         })
       })
       
       if (!response.ok) {
-        throw new Error('Failed to send email report')
+        throw new Error('Failed to send PDF report')
       }
+      
+      console.log('✅ PDF report sent successfully')
     } catch (error) {
-      console.error('Error sending detailed report:', error)
+      console.error('Error sending PDF report:', error)
       throw error
     }
   }

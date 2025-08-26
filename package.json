@@ -12,6 +12,7 @@
     "clsx": "^2.1.1",
     "firebase": "9.23.0",
     "framer-motion": "^10.16.16",
+    "jspdf": "^3.0.1",
     "lucide-react": "^0.294.0",
     "next": "14.0.4",
     "react": "^18",
