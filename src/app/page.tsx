@@ -15,11 +15,9 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Brain className="w-6 h-6 text-white" />
-              </div>
+              <img src="/vedyx-logo-with-text.png" alt="Vedyx Learning" className="h-20" />
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Learning Assessment Center</h1>
+                <h1 className="text-xl font-bold text-slate-900">Vedyx Learning Assessment Center</h1>
                 <p className="text-sm text-slate-600">Evidence-Based Educational Evaluation</p>
               </div>
             </div>

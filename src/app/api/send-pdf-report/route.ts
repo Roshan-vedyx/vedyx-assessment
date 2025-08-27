@@ -6,6 +6,16 @@ export async function POST(request: Request) {
   try {
     const { email, childName, reportData } = await request.json()
     
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i
+    if (!emailRegex.test(email)) {
+      console.error('❌ Invalid email format:', email)
+      return NextResponse.json(
+        { error: `Invalid email format: ${email}` }, 
+        { status: 400 }
+      )
+    }
+    
     console.log(`📧 Sending PDF report for ${childName} to ${email}`)
     
     // Generate PDF

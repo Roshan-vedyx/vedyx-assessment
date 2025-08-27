@@ -45,7 +45,6 @@ export interface AssessmentQuestion {
     sessionId: string
     startTime: Date
     formData?: FormData
-    answers: AssessmentAnswer[]
     results?: AssessmentResults
     conversionEvents: ConversionEvent[]
     completedAt?: Date

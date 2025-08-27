@@ -57,11 +57,6 @@ export default function QuizPage() {
           await addDoc(collection(db, 'assessments'), {
             sessionId,
             formData,
-            answers: [...answers, {
-              questionId: question.id,
-              answer: selectedAnswer!,
-              timestamp: new Date()
-            }],
             results,
             completedAt: new Date(),
             source: 'microsite'

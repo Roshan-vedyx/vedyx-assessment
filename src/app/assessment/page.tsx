@@ -15,92 +15,92 @@ const questions = [
   // SECTION 1: INFORMATION PROCESSING (Questions 1-4)
   {
     id: 1,
-    section: "Information Processing",
-    question: "When your child needs to understand a new concept, they typically...",
+    section: "Information Processing", 
+    question: "When learning academic content (like math concepts or science topics), your child typically...",
     options: [
-      { id: 'A', text: 'Ask to see examples or pictures first', score: { visual: 3, spatial: 1 } },
-      { id: 'B', text: 'Want to try it hands-on immediately', score: { kinesthetic: 3, motor: 1 } },
-      { id: 'C', text: 'Need you to explain it step-by-step verbally', score: { auditory: 3, verbal: 1 } },
-      { id: 'D', text: 'Prefer to read about it or take notes', score: { text: 3, sequential: 1 } }
+      { id: 'A', text: 'Asks to see examples, pictures, or demonstrations first', score: { visual: 3, spatial: 1 } },
+      { id: 'B', text: 'Wants to try practice problems or hands-on activities immediately', score: { kinesthetic: 3, motor: 1 } },
+      { id: 'C', text: 'Needs verbal explanations with discussion and questions', score: { auditory: 3, verbal: 1 } },
+      { id: 'D', text: 'Prefers to read about it in textbooks or take detailed notes', score: { text: 3, sequential: 1 } }
     ]
   },
   {
     id: 2,
     section: "Information Processing",
-    question: "When solving problems, {childName} usually...",
+    question: "When working on homework problems, {childName} usually...",
     options: [
-      { id: 'A', text: 'Draws pictures or diagrams to work it out', score: { visual: 3, creative: 1 } },
-      { id: 'B', text: 'Uses objects or acts it out physically', score: { kinesthetic: 3, handsOn: 1 } },
-      { id: 'C', text: 'Talks through the problem out loud', score: { auditory: 3, social: 1 } },
-      { id: 'D', text: 'Makes lists or writes down their thinking', score: { text: 3, analytical: 1 } }
+      { id: 'A', text: 'Draws pictures, makes charts, or uses visual organizers', score: { visual: 3, creative: 1 } },
+      { id: 'B', text: 'Uses manipulatives, builds models, or works standing up', score: { kinesthetic: 3, handsOn: 1 } },
+      { id: 'C', text: 'Explains their thinking out loud or asks for verbal help', score: { auditory: 3, social: 1 } },
+      { id: 'D', text: 'Takes written notes and makes lists to organize their work', score: { text: 3, analytical: 1 } }
     ]
   },
   {
     id: 3,
     section: "Information Processing",
-    question: "Your child remembers information best when it's presented...",
+    question: "When studying for tests, your child retains information best using...",
     options: [
-      { id: 'A', text: 'With charts, graphs, or visual organizers', score: { visual: 3, memory: 1 } },
-      { id: 'B', text: 'Through hands-on activities or experiments', score: { kinesthetic: 3, experiential: 1 } },
-      { id: 'C', text: 'Through stories, discussions, or lectures', score: { auditory: 3, storytelling: 1 } },
-      { id: 'D', text: 'In written form they can review and highlight', score: { text: 3, comprehension: 1 } }
+      { id: 'A', text: 'Flashcards, diagrams, or color-coded visual materials', score: { visual: 3, memory: 1 } },
+      { id: 'B', text: 'Acting out concepts or using movement while reviewing', score: { kinesthetic: 3, experiential: 1 } },
+      { id: 'C', text: 'Being quizzed verbally or explaining concepts aloud', score: { auditory: 3, storytelling: 1 } },
+      { id: 'D', text: 'Re-reading notes and making written summaries', score: { text: 3, comprehension: 1 } }
     ]
   },
   {
     id: 4,
-    section: "Information Processing",
-    question: "When following directions, {childName} succeeds most when you...",
+    section: "Information Processing", 
+    question: "When you give multi-step instructions (like getting ready for school), {childName} succeeds most when you...",
     options: [
-      { id: 'A', text: 'Show them or give them a visual checklist', score: { visual: 3, sequential: 1 } },
-      { id: 'B', text: 'Let them practice the steps physically', score: { kinesthetic: 3, practice: 1 } },
-      { id: 'C', text: 'Explain each step clearly and check understanding', score: { auditory: 3, stepByStep: 1 } },
-      { id: 'D', text: 'Write down the instructions for them to follow', score: { text: 3, independent: 1 } }
+      { id: 'A', text: 'Provide a visual checklist or step-by-step pictures', score: { visual: 3, sequential: 1 } },
+      { id: 'B', text: 'Have them practice the routine physically several times', score: { kinesthetic: 3, practice: 1 } },
+      { id: 'C', text: 'Explain each step clearly and have them repeat it back', score: { auditory: 3, stepByStep: 1 } },
+      { id: 'D', text: 'Write down the instructions for them to follow independently', score: { text: 3, independent: 1 } }
     ]
   },
 
-  // SECTION 2: EXECUTIVE FUNCTION SKILLS (Questions 5-8)
+  // SECTION 2: EXECUTIVE FUNCTION SKILLS (Questions 5-8) 
   {
     id: 5,
     section: "Executive Function",
-    question: "When starting homework or a big project, your child...",
+    question: "When faced with large homework assignments or projects, your child...",
     options: [
-      { id: 'A', text: 'Needs help breaking it into smaller visual steps', score: { visualOrg: 3, planning: 1 } },
-      { id: 'B', text: 'Does best with movement breaks built into the work', score: { movementReg: 3, attention: 1 } },
-      { id: 'C', text: 'Benefits from talking through the plan first', score: { verbalPlan: 3, social: 1 } },
-      { id: 'D', text: 'Likes to organize all materials and make a written plan', score: { writtenOrg: 3, goalDirect: 1 } }
+      { id: 'A', text: 'Needs help creating visual timelines or breaking into picture steps', score: { visualOrg: 3, planning: 1 } },
+      { id: 'B', text: 'Works best when movement breaks are built into the work schedule', score: { movementReg: 3, attention: 1 } },
+      { id: 'C', text: 'Benefits from discussing the plan and regular verbal check-ins', score: { verbalPlan: 3, social: 1 } },
+      { id: 'D', text: 'Prefers to organize all materials and create written action plans', score: { writtenOrg: 3, goalDirect: 1 } }
     ]
   },
   {
     id: 6,
     section: "Executive Function",
-    question: "Your child's attention and focus work best when...",
+    question: "During focused academic work (like reading or math homework), {childName}'s attention works best when...",
     options: [
-      { id: 'A', text: 'They have a clean, organized visual workspace', score: { visualAttention: 3, environment: 1 } },
-      { id: 'B', text: 'They can fidget or move while learning', score: { movementFocus: 3, regulation: 1 } },
-      { id: 'C', text: 'Background noise is minimal and they can hear clearly', score: { auditoryProcess: 3, concentration: 1 } },
-      { id: 'D', text: 'They have written goals and can check off progress', score: { goalPersist: 3, selfMonitor: 1 } }
+      { id: 'A', text: 'Their workspace is visually organized with minimal clutter', score: { visualAttention: 3, environment: 1 } },
+      { id: 'B', text: 'They can use fidget tools or work in different positions', score: { movementFocus: 3, regulation: 1 } },
+      { id: 'C', text: 'Background noise is minimal and instructions are clear', score: { auditoryProcess: 3, concentration: 1 } },
+      { id: 'D', text: 'They have written goals and can check off completed work', score: { goalPersist: 3, selfMonitor: 1 } }
     ]
   },
   {
     id: 7,
-    section: "Executive Function",
-    question: "When {childName} makes a mistake, they typically...",
+    section: "Executive Function", 
+    question: "When your child doesn't understand homework instructions, they typically...",
     options: [
-      { id: 'A', text: 'Need to see what went wrong visually', score: { visualError: 3, recognition: 1 } },
-      { id: 'B', text: 'Want to try again immediately with their hands', score: { trialError: 3, resilience: 1 } },
-      { id: 'C', text: 'Benefit from talking through what happened', score: { metacognitive: 3, reflection: 1 } },
-      { id: 'D', text: 'Like to write down what to do differently next time', score: { selfMonitorWritten: 3, improvement: 1 } }
+      { id: 'A', text: 'Ask you to show them an example of what it should look like', score: { visualError: 3, recognition: 1 } },
+      { id: 'B', text: 'Want to try different approaches until something works', score: { trialError: 3, resilience: 1 } },
+      { id: 'C', text: 'Ask for verbal clarification and step-by-step guidance', score: { metacognitive: 3, reflection: 1 } },
+      { id: 'D', text: 'Re-read instructions carefully or look for written examples', score: { selfMonitorWritten: 3, improvement: 1 } }
     ]
   },
   {
     id: 8,
     section: "Executive Function",
-    question: "Your child manages time and transitions best when...",
+    question: "For daily routines and school transitions, {childName} manages time best when...",
     options: [
-      { id: 'A', text: 'They have visual schedules or timers they can see', score: { visualTime: 3, structure: 1 } },
-      { id: 'B', text: 'They get physical warnings before transitions', score: { physicalTrans: 3, flexibility: 1 } },
-      { id: 'C', text: 'You give verbal countdowns and explanations', score: { auditoryTime: 3, communication: 1 } },
-      { id: 'D', text: 'They can check items off a written schedule', score: { writtenTime: 3, independence: 1 } }
+      { id: 'A', text: 'Using visual schedules, timers, or countdown clocks they can see', score: { visualTime: 3, structure: 1 } },
+      { id: 'B', text: 'Getting physical movement warnings before transitions', score: { physicalTrans: 3, flexibility: 1 } },
+      { id: 'C', text: 'Receiving verbal countdowns and explanations of what comes next', score: { auditoryTime: 3, communication: 1 } },
+      { id: 'D', text: 'Following and checking off items on a written daily schedule', score: { writtenTime: 3, independence: 1 } }
     ]
   },
 
@@ -108,45 +108,45 @@ const questions = [
   {
     id: 9,
     section: "Strengths & Motivations",
-    question: "Your child shows their best thinking when they can...",
+    question: "During free choice time, {childName} consistently chooses activities that involve...",
     options: [
-      { id: 'A', text: 'Create visual projects or presentations', score: { creative: 3, visualMotiv: 1 } },
-      { id: 'B', text: 'Build, make, or demonstrate something', score: { mastery: 3, handsOnMotiv: 1 } },
-      { id: 'C', text: 'Discuss ideas and explain their thinking', score: { social: 3, verbalMotiv: 1 } },
-      { id: 'D', text: 'Research, read, and write about topics', score: { research: 3, independentMotiv: 1 } }
+      { id: 'A', text: 'Drawing, building with blocks/LEGOs, watching educational videos', score: { creative: 3, visual: 1 } },
+      { id: 'B', text: 'Sports, dancing, hands-on science experiments, or building projects', score: { mastery: 3, handsOn: 1 } },
+      { id: 'C', text: 'Group games, storytelling, music, or socializing with friends', score: { social: 3, verbal: 1 } },
+      { id: 'D', text: 'Reading, writing stories, doing puzzles, or independent research', score: { research: 3, independent: 1 } }
     ]
   },
   {
     id: 10,
     section: "Strengths & Motivations",
-    question: "{childName} feels most confident learning when...",
+    question: "{childName} shows the most academic engagement and confidence when...",
     options: [
-      { id: 'A', text: 'They can see progress visually (charts, portfolios)', score: { visualFeedback: 3, progress: 1 } },
-      { id: 'B', text: 'They achieve through doing and practicing', score: { achievement: 3, practiceMotiv: 1 } },
-      { id: 'C', text: 'They can share and get feedback through discussion', score: { socialCollab: 3, feedback: 1 } },
-      { id: 'D', text: 'They can track their growth through written reflection', score: { selfReflect: 3, growth: 1 } }
+      { id: 'A', text: 'They can create visual projects, presentations, or portfolios', score: { visualFeedback: 3, progress: 1 } },
+      { id: 'B', text: 'They master skills through repeated practice and hands-on learning', score: { achievement: 3, practice: 1 } },
+      { id: 'C', text: 'They can discuss their learning and collaborate with others', score: { socialCollab: 3, feedback: 1 } },
+      { id: 'D', text: 'They can reflect on their learning through written work or goal-setting', score: { selfReflect: 3, growth: 1 } }
     ]
   },
   {
     id: 11,
     section: "Strengths & Motivations",
-    question: "Your child's natural curiosity shows up most when they...",
+    question: "When exploring topics they're interested in, your child most often...",
     options: [
-      { id: 'A', text: 'Can explore topics through images, videos, or art', score: { artistic: 3, explore: 1 } },
-      { id: 'B', text: 'Can investigate through experiments or field trips', score: { scientific: 3, investigate: 1 } },
-      { id: 'C', text: 'Can ask questions and engage in conversations', score: { interpersonal: 3, question: 1 } },
-      { id: 'D', text: 'Can dive deep into books or research projects', score: { analytical: 3, deepDive: 1 } }
+      { id: 'A', text: 'Looks up images, videos, or creates visual representations', score: { artistic: 3, explore: 1 } },
+      { id: 'B', text: 'Wants to conduct experiments or investigate through hands-on activities', score: { scientific: 3, investigate: 1 } },
+      { id: 'C', text: 'Asks lots of questions and engages others in conversations about it', score: { interpersonal: 3, question: 1 } },
+      { id: 'D', text: 'Reads books, articles, or does deep research on the topic', score: { analytical: 3, deepDive: 1 } }
     ]
   },
   {
     id: 12,
     section: "Strengths & Motivations",
-    question: "When {childName} faces a challenge, they persevere best when you...",
+    question: "When {childName} faces academic setbacks or difficulties, they bounce back best when you...",
     options: [
-      { id: 'A', text: 'Help them visualize success and progress', score: { goalVisual: 3, success: 1 } },
-      { id: 'B', text: 'Encourage them to keep trying and practicing', score: { persistPractice: 3, encourage: 1 } },
-      { id: 'C', text: 'Talk through strategies and offer support', score: { socialSupport: 3, strategy: 1 } },
-      { id: 'D', text: 'Help them set written goals and track progress', score: { goalWritten: 3, track: 1 } }
+      { id: 'A', text: 'Help them visualize their progress and future success', score: { goalVisual: 3, success: 1 } },
+      { id: 'B', text: 'Encourage continued practice and celebrate small improvements', score: { persistPractice: 3, encourage: 1 } },
+      { id: 'C', text: 'Discuss strategies together and provide ongoing emotional support', score: { socialSupport: 3, strategy: 1 } },
+      { id: 'D', text: 'Help them set written goals and track their learning progress', score: { goalWritten: 3, track: 1 } }
     ]
   }
 ]
@@ -487,8 +487,7 @@ export default function AssessmentPage() {
       ...report,
       profile,
       scores,
-      formData,
-      answers,
+      formData,      
       timestamp: new Date()
     }
   
@@ -496,9 +495,13 @@ export default function AssessmentPage() {
       // Save to Firebase (only if db is available)
       if (db) {
         await addDoc(collection(db, 'assessments'), {
-          ...finalResults,
           sessionId: `assessment_${Date.now()}`,
-          completedAt: new Date()
+          formData,
+          scores,
+          profile,
+          report,
+          completedAt: new Date(),
+          timestamp: new Date()
         })
       }
   
@@ -549,30 +552,51 @@ export default function AssessmentPage() {
 
   const sendDetailedEmailReport = async (results: any) => {
     try {
-      // Fix: Get primary learning style from results correctly
-      const primaryStyle = results.profile?.primaryLearningStyle || 
-                          results.primaryLearningStyle || 
-                          'Visual' // fallback
+      // Generate full professional profile (same as online report)
+      const topScores = Object.entries(results.scores || {})
+        .sort(([,a], [,b]) => (b as number) - (a as number))
+        .slice(0, 3);
+      
+      const primaryDomain = topScores[0]?.[0] || 'balanced';
+      const primaryScore = topScores[0]?.[1] as number || 0;
+      const percentile = calculatePercentile(primaryScore, primaryDomain);
+      
+      const profileMap: Record<string, any> = {
+        visual: {
+          title: 'Visual-Spatial Processing Profile',
+          clinicalNote: 'Demonstrates above-average visual-spatial intelligence with preference for graphic organizers and visual learning supports.'
+        },
+        kinesthetic: {
+          title: 'Kinesthetic-Bodily Learning Profile', 
+          clinicalNote: 'Shows preference for experiential learning and benefits from movement integration in academic tasks.'
+        },
+        auditory: {
+          title: 'Auditory-Linguistic Processing Profile',
+          clinicalNote: 'Demonstrates strong verbal processing abilities with preference for discussion-based learning.'
+        },
+        text: {
+          title: 'Analytical-Sequential Learning Profile',
+          clinicalNote: 'Shows strong analytical thinking with preference for written instruction and independent study.'
+        }
+      };
   
-      const reportData = {
-        childName: results.formData.childName,
-        childAge: results.formData.childAge,
-        primaryLearningStyle: primaryStyle, // Fixed this line
-        scores: results.scores,
-        recommendations: [
-          `Focus on ${primaryStyle.toLowerCase()} learning activities`,
-          'Implement multi-sensory approaches when possible',
-          'Create structured learning environments',
-          'Use positive reinforcement strategies',
-          'Break complex tasks into smaller steps'
-        ],
-        strategies: [
-          'Use visual aids and graphic organizers for better comprehension',
-          'Incorporate movement and hands-on activities',
-          'Provide clear, step-by-step instructions',
-          'Allow extra processing time when needed',
-          'Create consistent daily routines'
-        ]
+      const profile = profileMap[primaryDomain] || profileMap.visual;
+  
+      const fullReportData = {
+        ...results, // Pass all detailed results
+        profile: {
+          ...profile,
+          primaryDomain,
+          percentile
+        },
+        percentiles: {
+          visual: calculatePercentile(results.scores.visual || 0, 'visual'),
+          kinesthetic: calculatePercentile(results.scores.kinesthetic || 0, 'kinesthetic'),
+          auditory: calculatePercentile(results.scores.auditory || 0, 'auditory'),
+          text: calculatePercentile(results.scores.text || 0, 'text')
+        },
+        executiveFunction: calculateExecutiveFunction(results.scores),
+        htmlReport: generateDetailedReport(results) // Full comprehensive report
       }
       
       const response = await fetch('/api/send-pdf-report', {
@@ -581,7 +605,7 @@ export default function AssessmentPage() {
         body: JSON.stringify({
           email: results.formData.parentEmail,
           childName: results.formData.childName,
-          reportData
+          reportData: fullReportData // Use comprehensive data
         })
       })
       
@@ -680,9 +704,7 @@ export default function AssessmentPage() {
           <h1>${childName}'s Comprehensive Learning Assessment Report</h1>
           <p><strong>Multi-Dimensional Cognitive and Learning Style Evaluation</strong></p>
           <p>Date: ${new Date().toLocaleDateString()} | Age: ${childAge}</p>
-          <hr>
-          <p><em>Professional Assessment by Licensed Child Psychologist<br>
-          Specializing in Learning Differences and Neurodivergent Children</em></p>
+          
         </div>
 
         <div class="section">
@@ -921,8 +943,8 @@ export default function AssessmentPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="bg-blue-100 p-4 rounded-full w-fit mx-auto mb-6">
-                <Brain className="w-8 h-8 text-blue-600" />
+              <div className="w-fit mx-auto mb-6">
+                <img src="/vedyx-emblem.png" alt="Vedyx Learning" className="h-16" />
               </div>
               
               <h1 className="text-3xl font-bold text-slate-900 mb-4">
@@ -1026,30 +1048,37 @@ export default function AssessmentPage() {
   if (step === 'questions') {
     const currentQuestion = questions[currentQuestionIndex]
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100
-
+  
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <Card className="max-w-3xl w-full shadow-xl border-0">
-          <CardContent className="p-8">
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm font-medium text-slate-600">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </span>
-                <span className="text-sm font-medium text-blue-600">
-                  {currentQuestion.section}
-                </span>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        {/* Logo OUTSIDE and ABOVE everything */}
+        <div className="text-center mb-8 pt-8">
+          <img src="/vedyx-logo-with-text-transparent.png" alt="Vedyx Learning" className="h-24 mx-auto" />
+        </div>
+        
+        {/* Centered container for the card */}
+        <div className="flex items-center justify-center">
+          <Card className="max-w-3xl w-full shadow-xl border-0">
+            <CardContent className="p-8">
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm font-medium text-slate-600">
+                    Question {currentQuestionIndex + 1} of {questions.length}
+                  </span>
+                  <span className="text-sm font-medium text-blue-600">
+                    {currentQuestion.section}
+                  </span>
+                </div>
+                
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                  <motion.div
+                    className="bg-blue-600 h-2 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
               </div>
-              
-              <div className="w-full bg-slate-200 rounded-full h-2">
-                <motion.div
-                  className="bg-blue-600 h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-            </div>
 
             <motion.div
               key={currentQuestion.id}
@@ -1118,6 +1147,7 @@ export default function AssessmentPage() {
           </CardContent>
         </Card>
       </div>
+    </div>  
     )
   }
 
