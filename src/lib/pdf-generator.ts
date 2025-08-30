@@ -1,6 +1,30 @@
 // src/lib/pdf-generator.ts - COMPLETE PROFESSIONAL VERSION
 import { jsPDF } from 'jspdf'
 
+type LearningDomain = 'visual' | 'kinesthetic' | 'auditory' | 'text';
+
+interface ProfileContent {
+  superpower: string;
+  whyStruggles: string;
+  whatThisMeans: string;
+  homeStrategies: string[];
+  schoolAdvocacy: string;
+  redFlags: string;
+}
+
+type ProfilesMap = Record<LearningDomain, ProfileContent>;
+
+interface ProfileInsights {
+  profileType: string;
+  translation: string;
+  example: string;
+  mismatch: string;
+  strengths: string;
+  quickAction: string;
+}
+
+type InsightsMap = Record<LearningDomain, ProfileInsights>;
+
 // PROFESSIONAL HELPER FUNCTIONS
 const addTable = (doc: any, headers: string[], rows: string[][], yPos: number, pageWidth: number, margin: number) => {
   const colWidth = (pageWidth - 2 * margin) / headers.length
@@ -86,6 +110,30 @@ export interface ReportData {
   scores: any
   recommendations: string[]
   strategies: string[]
+  // Add the missing properties that your code is using:
+  profile?: {
+    primaryDomain?: string
+    percentile?: number
+    title?: string
+    clinicalNote?: string
+    [key: string]: any
+  }
+  percentiles?: {
+    visual?: number
+    kinesthetic?: number
+    auditory?: number
+    text?: number
+    [key: string]: any
+  }
+  formData?: {
+    childName?: string
+    parentEmail?: string
+    childAge?: string
+    [key: string]: any
+  }
+  executiveFunction?: number
+  htmlReport?: string
+  [key: string]: any  // This allows for any additional properties
 }
 
 export function generatePDFReport(data: any): Uint8Array {
@@ -170,8 +218,8 @@ export function generatePDFReport(data: any): Uint8Array {
   }
 
   // Get profile-specific insights
-  const getProfileContent = (domain: string, childName: string) => {
-    const profiles = {
+  const getProfileContent = (domain: string, childName: string): ProfileContent => {
+    const profiles: ProfilesMap = {
       visual: {
         superpower: `${childName} has a remarkable visual-spatial mind that can see patterns and solutions others miss.`,
         whyStruggles: "Most classrooms rely heavily on verbal instruction and lecture-style teaching, which doesn't match how visual learners process information.",
@@ -188,44 +236,51 @@ export function generatePDFReport(data: any): Uint8Array {
       kinesthetic: {
         superpower: `${childName} learns best through hands-on exploration and needs movement to think clearly and process information.`,
         whyStruggles: "Traditional classrooms require sitting still for long periods, which actually makes it harder for kinesthetic learners to focus and learn.",
-        whatThisMeans: `${childName} isn't being disruptive when they need to move — movement actually helps their brain process information. They understand concepts better when they can touch, build, or physically interact with learning materials.`,
+        whatThisMeans: `${childName} isn't being disruptive when they need to move — movement actually helps their brain process information.`,
         homeStrategies: [
-          "* Allow movement breaks every 15-20 minutes during homework",
-          "* Use hands-on materials (blocks, manipulatives) for math concepts",
-          "* Create a standing or exercise ball option for study time",
-          "* Turn learning into physical games and activities"
+          "* Allow movement during homework time",
+          "* Use hands-on materials for learning",
+          "* Take frequent movement breaks",
+          "* Create physical games for practicing skills"
         ],
-        schoolAdvocacy: `Request movement opportunities, fidget tools for focus, hands-on learning projects, and alternative seating options for ${childName}.`,
-        redFlags: "If movement strategies aren't improving focus after 4-6 weeks, or if ${childName} still struggles with attention despite physical accommodations."
+        schoolAdvocacy: `Ask teachers about movement opportunities, fidget tools, hands-on learning options, and flexible seating.`,
+        redFlags: "Constant restlessness even with movement opportunities, or becoming disruptive when forced to sit still."
       },
       auditory: {
-        superpower: `${childName} processes information exceptionally well through listening, discussion, and verbal explanation.`,
-        whyStruggles: "Many lessons rely on reading silently or working independently, which doesn't utilize auditory learners' strongest processing channel.",
-        whatThisMeans: `${childName} can understand complex ideas when they're explained verbally or when they can talk through their thinking. They often need to hear information to fully grasp it.`,
+        superpower: `${childName} has exceptional listening skills and learns beautifully through discussion, stories, and verbal explanation.`,
+        whyStruggles: "Much of school learning relies on reading silently and working independently, which removes their greatest strength.",
+        whatThisMeans: `${childName} shares this learning style with successful teachers, counselors, and leaders. They're natural communicators.`,
         homeStrategies: [
-          "* Read homework instructions aloud together",
+          "* Read homework instructions aloud",
+          "* Encourage talking through problems",
           "* Use audiobooks and educational podcasts",
-          "* Encourage " + childName + " to explain their thinking out loud",
-          "* Try background music or study groups for better focus"
+          "* Create songs or rhymes for memorizing facts"
         ],
-        schoolAdvocacy: `Request that ${childName}'s teachers provide verbal instructions alongside written ones, allow discussion time, and consider oral assessment options.`,
-        redFlags: "If verbal strategies aren't improving comprehension after 4-6 weeks, or if ${childName} struggles even with auditory supports."
+        schoolAdvocacy: `Request that teachers provide verbal instructions along with written ones and allow oral testing options.`,
+        redFlags: "Significant difficulty with reading comprehension despite strong listening skills."
       },
       text: {
-        superpower: `${childName} excels with structured, written information and learns best through reading and independent analysis.`,
-        whyStruggles: "Group activities and purely verbal instruction can be overwhelming when text-based learners need time to process information independently.",
-        whatThisMeans: `${childName} prefers to read instructions, take notes, and work through problems systematically. They often understand concepts better when they can see them written out and have time to process independently.`,
+        superpower: `${childName} excels at processing written information and thinking analytically.`,
+        whyStruggles: "Many classroom activities involve group work and quick verbal responses, which doesn't allow them to use their analytical strengths.",
+        whatThisMeans: `${childName} has the learning style of successful researchers, writers, and scholars. They thrive when given time to read and organize their thoughts.`,
         homeStrategies: [
           "* Provide written summaries of verbal instructions",
-          "* Create quiet, organized study spaces",
-          "* Use written planners and to-do lists",
-          "* Encourage note-taking and summary writing"
+          "* Allow extra time for processing questions",
+          "* Encourage note-taking and written planning",
+          "* Create quiet, organized study spaces"
         ],
-        schoolAdvocacy: `Request written instructions alongside verbal ones, quiet work time, and opportunities for ${childName} to demonstrate learning through written work.`,
-        redFlags: "If written strategies aren't improving organization after 4-6 weeks, or if ${childName} struggles with reading comprehension despite text-based supports."
+        schoolAdvocacy: `Ask teachers to provide written instructions and allow extra processing time.`,
+        redFlags: "Extreme anxiety about verbal participation despite strong written work."
       }
     };
-    return profiles[domain] || profiles.visual;
+  
+    // Type-safe way to access profiles
+    const validDomains: LearningDomain[] = ['visual', 'kinesthetic', 'auditory', 'text'];
+    const safeDomain = validDomains.includes(domain as LearningDomain) 
+      ? (domain as LearningDomain) 
+      : 'visual';
+    
+    return profiles[safeDomain];
   };
 
   const profile = getProfileContent(data.profile?.primaryDomain || 'visual', data.childName || data.formData?.childName);
@@ -347,7 +402,7 @@ export function generatePDFReport(data: any): Uint8Array {
   doc.text('Report created by Vedyx Learning Assessment Center', pageWidth/2, pageHeight - 15, { align: 'center' })
   doc.text(`For ${childName} • Generated on ${new Date().toLocaleDateString()}`, pageWidth/2, pageHeight - 8, { align: 'center' })
   
-  return doc.output('arraybuffer')
+  return new Uint8Array(doc.output('arraybuffer'))
 }
 
 // UPDATED EMAIL BODY (Remove clinical psychology references)
@@ -358,8 +413,8 @@ export function generateEmailBody(childName: string, reportData: ReportData): st
   const percentile = profile.percentile || 70;
   
   // Generate personalized insights based on learning profile
-  const getProfileInsights = (domain: string) => {
-    const insights = {
+  const getProfileInsights = (domain: string): ProfileInsights => {
+    const insights: InsightsMap = {
       visual: {
         profileType: "Visual-Spatial Learner",
         translation: "Excels when information is presented through pictures, diagrams, and visual organization",
@@ -393,7 +448,14 @@ export function generateEmailBody(childName: string, reportData: ReportData): st
         quickAction: `Provide written summaries of verbal instructions and create a quiet, organized study space for ${childName}`
       }
     };
-    return insights[domain] || insights.visual;
+  
+    // Type-safe way to access insights (same pattern as getProfileContent)
+    const validDomains: LearningDomain[] = ['visual', 'kinesthetic', 'auditory', 'text'];
+    const safeDomain = validDomains.includes(domain as LearningDomain) 
+      ? (domain as LearningDomain) 
+      : 'visual';
+    
+    return insights[safeDomain];
   };
   
   const insights = getProfileInsights(primaryDomain);

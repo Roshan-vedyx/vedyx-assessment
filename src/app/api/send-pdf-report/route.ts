@@ -67,8 +67,14 @@ export async function POST(request: Request) {
     
   } catch (error) {
     console.error('❌ PDF email error:', error)
+    
+    // Fix: Properly handle unknown error type
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : 'An unexpected error occurred'
+    
     return NextResponse.json(
-      { error: `Failed to send PDF report: ${error.message}` }, 
+      { error: `Failed to send PDF report: ${errorMessage}` }, 
       { status: 500 }
     )
   }
