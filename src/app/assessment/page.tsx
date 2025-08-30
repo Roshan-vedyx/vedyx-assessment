@@ -910,7 +910,7 @@ export default function AssessmentPage() {
         <footer style="text-align: center; margin-top: 50px; padding: 30px; background: #f8f9fa; border-top: 2px solid #dee2e6;">
           <h3>Professional Credentials</h3>
           <p><strong>Assessment Developed By:</strong><br>
-          Licensed Child Psychologist<br>
+          Educational Assessment Specialist<br>
           Specialization: Learning Differences & Neurodivergent Children (Ages 8-15)<br>
           Professional Training: Developmental Psychology, Learning Sciences, Universal Design for Learning</p>
           
@@ -944,7 +944,7 @@ export default function AssessmentPage() {
               transition={{ duration: 0.6 }}
             >
               <div className="w-fit mx-auto mb-6">
-                <img src="/vedyx-emblem.png" alt="Vedyx Learning" className="h-16" />
+                <img src="/vedyx-logo-with-text.png" alt="Vedyx Learning" className="h-16" />
               </div>
               
               <h1 className="text-3xl font-bold text-slate-900 mb-4">
@@ -993,14 +993,25 @@ export default function AssessmentPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Child's Age</label>
-                  <Input
-                    type="text"
+                  <select
                     value={formData.childAge}
                     onChange={(e) => setFormData({...formData, childAge: e.target.value})}
-                    className="w-full"
-                    placeholder="e.g., 8 or 8 years old"
+                    className="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                     required
-                  />
+                  >
+                    <option value="">Select age</option>
+                    <option value="6">6 years old</option>
+                    <option value="7">7 years old</option>
+                    <option value="8">8 years old</option>
+                    <option value="9">9 years old</option>
+                    <option value="10">10 years old</option>
+                    <option value="11">11 years old</option>
+                    <option value="12">12 years old</option>
+                    <option value="13">13 years old</option>
+                    <option value="14">14 years old</option>
+                    <option value="15">15 years old</option>
+                    <option value="15+">15+ years old</option>
+                  </select>
                 </div>
                 
                 <div>

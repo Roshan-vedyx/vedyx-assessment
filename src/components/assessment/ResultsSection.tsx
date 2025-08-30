@@ -16,7 +16,8 @@ import {
   Star,
   Mail,
   Share2,
-  Download
+  Download,
+  ArrowRight
 } from 'lucide-react'
 
 interface ResultsSectionProps {
@@ -360,6 +361,33 @@ export function ResultsSection({ results, formData, onEmailResults }: ResultsSec
           </div>
         </div>
 
+        {/* Vedyx CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="mt-8"
+        >
+          <Card className="shadow-xl border-0 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">
+                Want to explore what we do at Vedyx to help {formData.childName}?
+              </h3>
+              <p className="text-indigo-100 mb-6 text-lg max-w-2xl mx-auto">
+                Discover how our research-based learning platform puts these insights into action 
+                with personalized activities designed specifically for {formData.childName}'s learning style.
+              </p>
+              <Button
+                className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold py-3 px-8 rounded-xl text-lg"
+                onClick={() => window.open('https://vedyx.ai', '_blank')}
+              >
+                Learn More About Vedyx
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Professional Disclaimer */}
         <Card className="mt-8 shadow-lg border-l-4 border-l-amber-500">
           <CardContent className="p-6">
@@ -392,7 +420,7 @@ export function ResultsSection({ results, formData, onEmailResults }: ResultsSec
         {/* Footer - Professional Branding */}
         <div className="text-center mt-8 text-sm text-slate-500">
           <p className="mb-2">
-            Assessment developed by licensed Child Psychologist specializing in learning differences 
+          Assessment developed by Educational Assessment Specialist specializing in learning differences 
             and neurodivergent children (ages 8-15)
           </p>
           <p>

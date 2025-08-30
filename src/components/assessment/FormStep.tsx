@@ -125,10 +125,17 @@ export function FormStep({ onSubmit }: FormStepProps) {
                       required
                     >
                       <option value="">Select age</option>
+                      <option value="6">6 years old</option>
+                      <option value="7">7 years old</option>
+                      <option value="8">8 years old</option>
+                      <option value="9">9 years old</option>
+                      <option value="10">10 years old</option>
                       <option value="11">11 years old</option>
                       <option value="12">12 years old</option>
                       <option value="13">13 years old</option>
                       <option value="14">14 years old</option>
+                      <option value="15">15 years old</option>
+                      <option value="15+">15+ years old</option>
                     </select>
                   </div>
                 </motion.div>

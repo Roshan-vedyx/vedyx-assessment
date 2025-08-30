@@ -89,7 +89,7 @@ export default function LandingPage() {
               </Link>
               
               <p className="text-sm text-slate-500 mt-4">
-                Trusted by over 10,000 families • No registration required • Instant results
+                Trusted by over 7000 families • 100% Free • Instant results
               </p>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-center space-x-8 text-slate-600">
               <div className="flex items-center">
                 <Users className="w-5 h-5 mr-2" />
-                <span className="font-semibold">10,000+ Assessments</span>
+                <span className="font-semibold">7000+ Assessments</span>
               </div>
               <div className="flex items-center">
                 <Star className="w-5 h-5 mr-2 text-yellow-500" />
@@ -197,7 +197,7 @@ export default function LandingPage() {
                 <p className="text-slate-700 mb-4 italic">
                   "This assessment helped us understand why traditional teaching methods weren't working for our son. The recommendations were spot-on."
                 </p>
-                <p className="text-sm text-slate-600">— Sarah M., Parent</p>
+                <p className="text-sm text-slate-600">— Sarah M., Parent to 10 year old Eowan</p>
               </CardContent>
             </Card>
 
@@ -213,7 +213,7 @@ export default function LandingPage() {
                 <p className="text-slate-700 mb-4 italic">
                   "As a teacher, I found this assessment incredibly valuable for understanding my students' learning needs. Very professional."
                 </p>
-                <p className="text-sm text-slate-600">— Jennifer L., Elementary Teacher</p>
+                <p className="text-sm text-slate-600">— Ashwini Ranganathan, Elementary Teacher</p>
               </CardContent>
             </Card>
 
@@ -229,7 +229,7 @@ export default function LandingPage() {
                 <p className="text-slate-700 mb-4 italic">
                   "The detailed report gave us concrete strategies to help our daughter succeed. We shared it with her school team too."
                 </p>
-                <p className="text-sm text-slate-600">— Michael R., Parent</p>
+                <p className="text-sm text-slate-600">— Karan Ahuja, Parent to 10 year old Avaantika</p>
               </CardContent>
             </Card>
           </div>
@@ -386,7 +386,7 @@ export default function LandingPage() {
           <div className="border-t border-slate-800 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-slate-400 text-sm">
-                © 2024 Learning Assessment Center. All rights reserved.
+                © 2024 Vedyx Learning Assessment Center. All rights reserved.
               </p>
               <div className="text-xs text-slate-500 mt-4 md:mt-0">
                 <p>This assessment provides educational insights and is not a diagnostic tool.</p>
