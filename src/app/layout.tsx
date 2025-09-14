@@ -5,13 +5,18 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Vedyx Leap Learning Assessment - Discover Your Child\'s Learning Style',
-  description: 'Free assessment to discover how your child learns best. Get personalized recommendations for supporting their literacy journey.',
+  title: "Vedyx Leap Learning Assessment - Discover Your Child's Learning Style",
+  description:
+    "Free assessment to discover how your child learns best. Get personalized recommendations for supporting their literacy journey.",
   openGraph: {
-    title: 'Vedyx Leap Learning Assessment',
-    description: 'Discover how your child learns best with our free assessment',
-    images: ['/og-image.png'],
-  }
+    title: "Vedyx Leap Learning Assessment",
+    description:
+      "Discover how your child learns best with our free assessment",
+    images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.png", 
+  },
 }
 
 export default function RootLayout({
