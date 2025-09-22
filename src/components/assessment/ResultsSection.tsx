@@ -32,15 +32,17 @@ interface ResultsSectionProps {
 
 // Helper function to calculate percentiles
 const calculatePercentile = (score: number, domain: string) => {
-  // Mock percentile calculation - in production, use real normative data
   const maxPossible = 12; // 4 questions × 3 points max
   const percentage = (score / maxPossible) * 100;
   
-  if (percentage >= 85) return 95;
-  if (percentage >= 70) return 85;
-  if (percentage >= 55) return 70;
-  if (percentage >= 40) return 55;
-  if (percentage >= 25) return 40;
+  if (percentage >= 92) return 90;
+  if (percentage >= 83) return 75;
+  if (percentage >= 75) return 65;
+  if (percentage >= 67) return 55;
+  if (percentage >= 58) return 50;
+  if (percentage >= 50) return 45;
+  if (percentage >= 42) return 35;
+  if (percentage >= 33) return 30;
   return 25;
 };
 

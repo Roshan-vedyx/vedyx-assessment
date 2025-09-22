@@ -1,180 +1,108 @@
-// src/lib/pdf-generator.ts - COMPLETE PROFESSIONAL VERSION
-import { jsPDF } from 'jspdf'
-
-type LearningDomain = 'visual' | 'kinesthetic' | 'auditory' | 'text';
-
-interface ProfileContent {
-  superpower: string;
-  whyStruggles: string;
-  whatThisMeans: string;
-  homeStrategies: string[];
-  schoolAdvocacy: string;
-  redFlags: string;
-}
-
-type ProfilesMap = Record<LearningDomain, ProfileContent>;
-
-interface ProfileInsights {
-  profileType: string;
-  translation: string;
-  example: string;
-  mismatch: string;
-  strengths: string;
-  quickAction: string;
-}
-
-type InsightsMap = Record<LearningDomain, ProfileInsights>;
-
-// PROFESSIONAL HELPER FUNCTIONS
-const addTable = (doc: any, headers: string[], rows: string[][], yPos: number, pageWidth: number, margin: number) => {
-  const colWidth = (pageWidth - 2 * margin) / headers.length
-  const rowHeight = 12 // Increased from 8 for better readability
-  
-  // Professional header styling
-  doc.setFillColor(248, 250, 252) // Light gray background
-  doc.setDrawColor(226, 232, 240) // Border color
-  doc.rect(margin, yPos, pageWidth - 2 * margin, rowHeight, 'FD')
-  
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(11) // Increased from 10
-  doc.setTextColor(30, 41, 59) // Dark slate
-  
-  headers.forEach((header, i) => {
-    doc.text(header, margin + i * colWidth + 6, yPos + 8) // Better padding
-  })
-  yPos += rowHeight
-  
-  // Professional row styling
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(10)
-  
-  rows.forEach((row, rowIndex) => {
-    // Alternating row colors for better readability
-    if (rowIndex % 2 === 0) {
-      doc.setFillColor(255, 255, 255) // White
-    } else {
-      doc.setFillColor(249, 250, 251) // Very light gray
-    }
-    
-    doc.rect(margin, yPos, pageWidth - 2 * margin, rowHeight, 'FD')
-    
-    row.forEach((cell, i) => {
-      // Color-code percentiles for visual impact
-      if (i === 1 && cell.includes('th')) {
-        const percentile = parseInt(cell)
-        if (percentile >= 85) doc.setTextColor(21, 128, 61) // Green for superior
-        else if (percentile >= 70) doc.setTextColor(59, 130, 246) // Blue for above average
-        else doc.setTextColor(75, 85, 99) // Gray for average
-      } else {
-        doc.setTextColor(30, 41, 59)
-      }
-      
-      doc.text(cell, margin + i * colWidth + 6, yPos + 8)
-    })
-    yPos += rowHeight
-  })
-  
-  doc.setTextColor(0, 0, 0) // Reset color
-  return yPos + 15
-}
-
-const addHighlightBox = (doc: any, content: string, yPos: number, pageWidth: number, margin: number, bgColor = [235, 248, 255], borderColor = [59, 130, 246]) => {
-  const lines = doc.splitTextToSize(content, pageWidth - 2 * margin - 20)
-  const boxHeight = lines.length * 6 + 20
-  
-  // Add shadow effect for depth
-  doc.setFillColor(0, 0, 0, 0.1)
-  doc.roundedRect(margin + 2, yPos + 2, pageWidth - 2 * margin, boxHeight, 5, 5, 'F')
-  
-  // Main card background
-  doc.setFillColor(bgColor[0], bgColor[1], bgColor[2])
-  doc.roundedRect(margin, yPos, pageWidth - 2 * margin, boxHeight, 5, 5, 'F')
-  
-  // Left border accent (like online version)
-  doc.setFillColor(borderColor[0], borderColor[1], borderColor[2])
-  doc.rect(margin, yPos, 4, boxHeight)
-  
-  // Content with better typography
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(11)
-  doc.setTextColor(30, 41, 59)
-  doc.text(lines, margin + 15, yPos + 12)
-  
-  return yPos + boxHeight + 15
-}
+// src/lib/pdf-generator.ts
+import jsPDF from 'jspdf'
 
 export interface ReportData {
-  childName: string
-  childAge: string
-  primaryLearningStyle: string
-  scores: any
-  recommendations: string[]
-  strategies: string[]
-  // Add the missing properties that your code is using:
   profile?: {
     primaryDomain?: string
     percentile?: number
     title?: string
     clinicalNote?: string
-    [key: string]: any
   }
   percentiles?: {
     visual?: number
     kinesthetic?: number
     auditory?: number
     text?: number
-    [key: string]: any
+  }
+  scores?: {
+    visual?: number
+    kinesthetic?: number
+    auditory?: number
+    text?: number
   }
   formData?: {
     childName?: string
-    parentEmail?: string
     childAge?: string
-    [key: string]: any
   }
-  executiveFunction?: number
+  childName?: string
+  executiveFunction?: any
   htmlReport?: string
-  [key: string]: any  // This allows for any additional properties
 }
 
-export function generatePDFReport(data: any): Uint8Array {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  })
+interface ProfileContent {
+  profileType: string
+  superpower: string
+  whyStruggles: string
+  whatThisMeans: string
+  homeStrategies: string[]
+  schoolStrategies: string[]
+  teacherScript: string
+  redFlags: string
+  strengthsExamples: string
+  accommodationsList: string[]
+  researchBackground: string
+}
 
-  // Page setup
+type LearningDomain = 'visual' | 'kinesthetic' | 'auditory' | 'text'
+
+interface ProfileInsights {
+  profileType: string
+  translation: string
+  parentTip: string
+}
+
+type InsightsMap = Record<LearningDomain, ProfileInsights>
+
+export function generatePDFReport(data: ReportData): Uint8Array {
+  const doc = new jsPDF()
+  
+  // Page dimensions and styling
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
   const margin = 20
   let yPos = margin
 
-  // Brand colors (matching email)
-  const teal = [59, 185, 176]      // #3BB9B0
-  const coral = [255, 122, 89]    // #FF7A59  
-  const lightTeal = [240, 253, 252] // #F0FDFC
-  const lightCoral = [255, 233, 214] // #FFE9D6
-  const darkGray = [30, 41, 59]    // #1E293B
-  const mediumGray = [100, 116, 139] // #64748B
+  // Professional color palette
+  const primaryBlue = [25, 118, 210]     // Professional blue
+  const lightBlue = [227, 242, 253]      // Light blue background
+  const accentOrange = [255, 152, 0]     // Professional orange
+  const lightOrange = [255, 243, 224]    // Light orange background
+  const darkGray = [55, 65, 81]          // Professional dark gray
+  const mediumGray = [107, 114, 128]     // Medium gray
+  const lightGray = [249, 250, 251]      // Light gray background
+  const successGreen = [34, 197, 94]     // Success green
+  const lightGreen = [240, 253, 244]     // Light green background
 
-  // Helper functions for better design
-  const addColoredHeader = (title: string, bgColor: number[], textColor: number[] = [255, 255, 255]) => {
-    const headerHeight = 15
-    doc.setFillColor(bgColor[0], bgColor[1], bgColor[2])
-    doc.roundedRect(margin, yPos, pageWidth - 2 * margin, headerHeight, 3, 3, 'F')
-    
-    doc.setTextColor(textColor[0], textColor[1], textColor[2])
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(14)
-    doc.text(title, pageWidth/2, yPos + 10, { align: 'center' })
-    
-    yPos += headerHeight + 10
-    doc.setTextColor(0, 0, 0) // Reset to black
+  // Helper functions
+  function checkPageBreak(requiredSpace = 30) {
+    if (yPos + requiredSpace > pageHeight - margin) {
+      doc.addPage()
+      yPos = margin + 10
+    }
   }
 
-  const addInsightBox = (content: string, bgColor: number[], borderColor: number[]) => {
-    const lines = doc.splitTextToSize(content, pageWidth - 2 * margin - 16)
+  function addProfessionalHeader(title: string, color: number[]) {
+    checkPageBreak(40)
+    
+    // Header background
+    doc.setFillColor(color[0], color[1], color[2])
+    doc.roundedRect(margin, yPos - 5, pageWidth - 2 * margin, 25, 3, 3, 'F')
+    
+    // Header text
+    doc.setTextColor(255, 255, 255)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(14)
+    doc.text(title, margin + 10, yPos + 8)
+    
+    yPos += 35
+    doc.setTextColor(0, 0, 0)
+  }
+
+  function addInsightBox(content: string, bgColor: number[], borderColor: number[]) {
+    const lines = doc.splitTextToSize(content, pageWidth - 2 * margin - 20)
     const boxHeight = lines.length * 6 + 20
+    
+    checkPageBreak(boxHeight + 10)
     
     // Background
     doc.setFillColor(bgColor[0], bgColor[1], bgColor[2])
@@ -182,523 +110,696 @@ export function generatePDFReport(data: any): Uint8Array {
     
     // Border
     doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2])
-    doc.setLineWidth(0.5)
+    doc.setLineWidth(1.5)
     doc.roundedRect(margin, yPos, pageWidth - 2 * margin, boxHeight, 5, 5, 'S')
     
     // Content
+    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(11)
-    doc.text(lines, margin + 8, yPos + 12)
+    doc.text(lines, margin + 10, yPos + 15)
     
     yPos += boxHeight + 15
   }
 
-  const addActionableStrategy = (title: string, content: string, icon: string = "*") => {
-    // Strategy title with icon
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(12)
-    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
-    doc.text(`${icon} ${title}`, margin, yPos)
-    yPos += 8
+  function addScoreChart(percentiles: any) {
+    checkPageBreak(80)
     
-    // Strategy content
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(10)
-    doc.setTextColor(60, 60, 60)
-    const lines = doc.splitTextToSize(content, pageWidth - 2 * margin - 10)
-    doc.text(lines, margin + 5, yPos)
-    yPos += lines.length * 5 + 8
+    const chartWidth = pageWidth - 2 * margin
+    const chartHeight = 60
+    const barWidth = (chartWidth - 60) / 4
+    
+    // Chart background
+    doc.setFillColor(lightGray[0], lightGray[1], lightGray[2])
+    doc.rect(margin, yPos, chartWidth, chartHeight, 'F')
+    
+    // Chart border
+    doc.setDrawColor(mediumGray[0], mediumGray[1], mediumGray[2])
+    doc.rect(margin, yPos, chartWidth, chartHeight, 'S')
+    
+    const domains = ['Visual', 'Kinesthetic', 'Auditory', 'Text']
+    const scores = [
+      percentiles.visual || 0,
+      percentiles.kinesthetic || 0,
+      percentiles.auditory || 0,
+      percentiles.text || 0
+    ]
+    
+    domains.forEach((domain, index) => {
+      const x = margin + 15 + index * barWidth
+      const barHeight = (scores[index] / 100) * 40
+      const barY = yPos + 45 - barHeight
+      
+      // Bar
+      const isHighest = scores[index] === Math.max(...scores)
+      const barColor = isHighest ? primaryBlue : mediumGray
+      doc.setFillColor(barColor[0], barColor[1], barColor[2])
+      doc.rect(x, barY, barWidth - 10, barHeight, 'F')
+      
+      // Score label
+      doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.text(scores[index].toString(), x + (barWidth - 10) / 2, barY - 3, { align: 'center' })
+      
+      // Domain label
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+      doc.text(domain, x + (barWidth - 10) / 2, yPos + 55, { align: 'center' })
+    })
+    
+    yPos += chartHeight + 20
   }
 
-  const checkPageBreak = (neededSpace: number = 40) => {
-    if (yPos > pageHeight - neededSpace) {
-      doc.addPage()
-      yPos = margin
-    }
+  function addAccommodationsList(accommodations: string[]) {
+    checkPageBreak(40)
+    
+    accommodations.forEach((accommodation, index) => {
+      checkPageBreak(15)
+      
+      // Bullet point with professional styling
+      doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
+      doc.circle(margin + 5, yPos + 3, 2, 'F')
+      
+      // Accommodation text
+      doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(11)
+      const lines = doc.splitTextToSize(accommodation, pageWidth - 2 * margin - 15)
+      doc.text(lines, margin + 15, yPos + 5)
+      
+      yPos += lines.length * 6 + 3
+    })
   }
 
-  // Get profile-specific insights
-  const getProfileContent = (domain: string, childName: string): ProfileContent => {
-    const profiles: ProfilesMap = {
+  // Get profile content
+  function getProfileContent(domain: string, childName: string): ProfileContent {
+    const profiles: Record<LearningDomain, ProfileContent> = {
       visual: {
-        superpower: `${childName} has a remarkable visual-spatial mind that can see patterns and solutions others miss.`,
-        whyStruggles: "Most classrooms rely heavily on verbal instruction and lecture-style teaching, which doesn't match how visual learners process information.",
-        whatThisMeans: `When ${childName} sees a diagram or chart, they can understand complex concepts that might take pages of text to explain. They naturally organize information spatially and remember things better when they can visualize them.`,
+        profileType: "Visual-Spatial Learner",
+        superpower: `${childName} has exceptional visual processing abilities and learns beautifully through diagrams, charts, and spatial relationships.`,
+        whyStruggles: "Traditional classrooms rely heavily on verbal instruction and text-based learning, which bypasses their strongest processing channel.",
+        whatThisMeans: `${childName} shares this learning profile with successful architects, engineers, artists, and designers. They think in pictures and patterns, making them natural problem-solvers when information is presented visually.`,
         homeStrategies: [
-          "* Create visual schedules and checklists for daily routines",
-          "* Use mind maps and diagrams for homework planning", 
-          "* Replace verbal instructions with step-by-step visual guides",
-          "* Use color-coding for organization (subjects, priorities, categories)"
+          "Use mind maps and graphic organizers for all subjects",
+          "Create colorful study charts and visual timelines",
+          "Use flashcards with pictures and diagrams",
+          "Encourage drawing or sketching to work through problems",
+          "Set up a visual study space with charts and references"
         ],
-        schoolAdvocacy: `Request that ${childName}'s teachers provide visual aids alongside verbal instructions, use graphic organizers for note-taking, and allow visual project options for assessments.`,
-        redFlags: "If visual strategies aren't helping with homework completion after 4-6 weeks, or if organizational systems aren't improving daily routines."
+        schoolStrategies: [
+          "Provide graphic organizers for note-taking",
+          "Use visual aids during instruction",
+          "Allow diagram-based answers when appropriate",
+          "Provide written instructions alongside verbal ones"
+        ],
+        teacherScript: "We've learned that [child] is a visual-spatial learner who processes information best through charts, diagrams, and visual organization. Could we discuss some simple accommodations like graphic organizers or visual aids that might help them succeed?",
+        redFlags: "Persistent difficulty organizing thoughts in writing despite strong verbal abilities, trouble following multi-step verbal instructions, or significant gaps between understanding and written expression.",
+        strengthsExamples: "Strong pattern recognition, excellent spatial awareness, creative problem-solving, ability to see the 'big picture'",
+        accommodationsList: [
+          "Graphic organizers for all writing assignments",
+          "Visual schedules and assignment checklists",
+          "Concept maps for complex topics",
+          "Color-coding systems for different subjects",
+          "Preferential seating near visual displays",
+          "Extra time for written assignments",
+          "Option to demonstrate knowledge through diagrams"
+        ],
+        researchBackground: "Visual-spatial learning preferences are supported by research in cognitive psychology showing that approximately 65% of the population are visual learners (Fleming & Mills, 1992). Studies demonstrate that visual learners show increased comprehension when material is presented through diagrams and spatial organization."
       },
       kinesthetic: {
-        superpower: `${childName} learns best through hands-on exploration and needs movement to think clearly and process information.`,
-        whyStruggles: "Traditional classrooms require sitting still for long periods, which actually makes it harder for kinesthetic learners to focus and learn.",
-        whatThisMeans: `${childName} isn't being disruptive when they need to move — movement actually helps their brain process information.`,
+        profileType: "Kinesthetic-Tactile Learner",
+        superpower: `${childName} has exceptional body-smart intelligence and learns beautifully through movement, hands-on activities, and physical engagement.`,
+        whyStruggles: "Traditional classrooms emphasize sitting still and passive learning, which removes their primary learning channel and natural energy.",
+        whatThisMeans: `${childName} shares this learning profile with successful athletes, surgeons, mechanics, and performers. They think through their body and hands, making them natural builders and creators.`,
         homeStrategies: [
-          "* Allow movement during homework time",
-          "* Use hands-on materials for learning",
-          "* Take frequent movement breaks",
-          "* Create physical games for practicing skills"
+          "Use manipulatives for math (blocks, counting bears)",
+          "Create movement breaks every 15-20 minutes",
+          "Practice spelling by writing in sand or finger painting",
+          "Use building materials to demonstrate concepts",
+          "Set up an active learning space with fidget tools"
         ],
-        schoolAdvocacy: `Ask teachers about movement opportunities, fidget tools, hands-on learning options, and flexible seating.`,
-        redFlags: "Constant restlessness even with movement opportunities, or becoming disruptive when forced to sit still."
+        schoolStrategies: [
+          "Provide movement breaks during instruction",
+          "Allow use of fidget tools during lessons",
+          "Incorporate hands-on activities when possible",
+          "Offer standing desk or exercise ball seating options"
+        ],
+        teacherScript: "We've discovered that [child] is a kinesthetic learner who processes information best through movement and hands-on activities. Could we explore some accommodations like movement breaks or fidget tools that might help them focus and learn?",
+        redFlags: "Extreme difficulty sitting still that impacts learning, inability to focus without movement, or significant behavioral issues when required to remain sedentary for extended periods.",
+        strengthsExamples: "Strong motor coordination, excellent hands-on problem solving, high energy and enthusiasm, ability to learn through doing",
+        accommodationsList: [
+          "Movement breaks every 15-20 minutes",
+          "Standing desk or alternative seating options",
+          "Fidget tools for focus during instruction",
+          "Hands-on manipulatives for math concepts",
+          "Walking meetings or movement during discussions",
+          "Physical activity rewards for task completion",
+          "Option to demonstrate learning through building/creating"
+        ],
+        researchBackground: "Kinesthetic learning is supported by research showing that physical movement enhances cognitive processing and memory consolidation (Medina, 2008). Studies indicate that movement-based learning can improve academic performance by up to 20%."
       },
       auditory: {
+        profileType: "Auditory-Linguistic Learner",
         superpower: `${childName} has exceptional listening skills and learns beautifully through discussion, stories, and verbal explanation.`,
         whyStruggles: "Much of school learning relies on reading silently and working independently, which removes their greatest strength.",
-        whatThisMeans: `${childName} shares this learning style with successful teachers, counselors, and leaders. They're natural communicators.`,
+        whatThisMeans: `${childName} shares this learning style with successful teachers, counselors, and leaders. They're natural communicators who process information through sound and language.`,
         homeStrategies: [
-          "* Read homework instructions aloud",
-          "* Encourage talking through problems",
-          "* Use audiobooks and educational podcasts",
-          "* Create songs or rhymes for memorizing facts"
+          "Read homework instructions aloud",
+          "Encourage talking through problems",
+          "Use audiobooks and educational podcasts",
+          "Create songs or rhymes for memorizing facts",
+          "Study with background music or in groups"
         ],
-        schoolAdvocacy: `Request that teachers provide verbal instructions along with written ones and allow oral testing options.`,
-        redFlags: "Significant difficulty with reading comprehension despite strong listening skills."
+        schoolStrategies: [
+          "Provide verbal instructions along with written ones",
+          "Allow oral testing options when appropriate",
+          "Encourage participation in class discussions",
+          "Use recorded lessons for review"
+        ],
+        teacherScript: "We've learned that [child] is an auditory learner who processes information best through listening and verbal discussion. Could we discuss accommodations like oral testing options or verbal instructions that might help them demonstrate their knowledge?",
+        redFlags: "Significant difficulty with reading comprehension despite strong listening skills, inability to follow written directions that they understand when spoken, or marked discrepancy between oral and written performance.",
+        strengthsExamples: "Excellent listening comprehension, strong verbal communication, ability to learn through discussion, good memory for spoken information",
+        accommodationsList: [
+          "Verbal instructions alongside written directions",
+          "Oral testing options for assessments",
+          "Audio recordings of lessons for review",
+          "Permission to read assignments aloud",
+          "Participation in study groups and discussions",
+          "Use of text-to-speech technology",
+          "Verbal processing time before written responses"
+        ],
+        researchBackground: "Auditory learning preferences are supported by research in linguistics and cognitive science showing that verbal processing activates different neural pathways than visual processing (Paivio, 1986). Studies demonstrate improved comprehension when auditory learners receive information through multiple verbal channels."
       },
       text: {
-        superpower: `${childName} excels at processing written information and thinking analytically.`,
-        whyStruggles: "Many classroom activities involve group work and quick verbal responses, which doesn't allow them to use their analytical strengths.",
-        whatThisMeans: `${childName} has the learning style of successful researchers, writers, and scholars. They thrive when given time to read and organize their thoughts.`,
+        profileType: "Analytical-Sequential Learner",
+        superpower: `${childName} has exceptional analytical abilities and learns beautifully through reading, writing, and systematic organization.`,
+        whyStruggles: "Modern classrooms often emphasize collaborative and multimedia learning, which can overwhelm their preference for quiet, independent study.",
+        whatThisMeans: `${childName} shares this learning style with successful researchers, writers, and analysts. They think in words and logical sequences, making them natural scholars and detailed thinkers.`,
         homeStrategies: [
-          "* Provide written summaries of verbal instructions",
-          "* Allow extra time for processing questions",
-          "* Encourage note-taking and written planning",
-          "* Create quiet, organized study spaces"
+          "Provide detailed written instructions for all tasks",
+          "Create organized study schedules and checklists",
+          "Use research and note-taking for projects",
+          "Encourage journaling and written reflection",
+          "Set up a quiet, organized study environment"
         ],
-        schoolAdvocacy: `Ask teachers to provide written instructions and allow extra processing time.`,
-        redFlags: "Extreme anxiety about verbal participation despite strong written work."
+        schoolStrategies: [
+          "Provide written instructions and rubrics",
+          "Allow extra time for written assignments",
+          "Offer alternative to group work when possible",
+          "Encourage detailed note-taking and organization"
+        ],
+        teacherScript: "We've discovered that [child] is an analytical learner who processes information best through reading and written work. Could we discuss accommodations like detailed written instructions or independent work options that might help them thrive?",
+        redFlags: "Extreme anxiety in group work situations, inability to process verbal instructions without written backup, or significant stress when required to participate in collaborative activities.",
+        strengthsExamples: "Strong reading comprehension, excellent written expression, systematic thinking, attention to detail",
+        accommodationsList: [
+          "Detailed written instructions for all assignments",
+          "Quiet workspace options during independent work",
+          "Extended time for written assignments",
+          "Alternative to group presentations (written reports)",
+          "Advance notice of schedule changes",
+          "Organized handouts and clear expectations",
+          "Option to demonstrate learning through research projects"
+        ],
+        researchBackground: "Analytical-sequential learning is supported by research in educational psychology showing that systematic, text-based instruction benefits students with strong linguistic intelligence (Gardner, 1983). Studies indicate that detailed written instruction improves comprehension for analytical learners."
       }
     };
-  
-    // Type-safe way to access profiles
+
     const validDomains: LearningDomain[] = ['visual', 'kinesthetic', 'auditory', 'text'];
     const safeDomain = validDomains.includes(domain as LearningDomain) 
       ? (domain as LearningDomain) 
       : 'visual';
     
     return profiles[safeDomain];
-  };
+  }
 
-  const profile = getProfileContent(data.profile?.primaryDomain || 'visual', data.childName || data.formData?.childName);
-  const childName = data.childName || data.formData?.childName;
+  const profile = getProfileContent(data.profile?.primaryDomain || 'visual', data.childName || data.formData?.childName || 'Your Child');
+  const childName = data.childName || data.formData?.childName || 'Your Child';
   const percentile = data.profile?.percentile || 70;
+  const percentiles = data.percentiles || { visual: 50, kinesthetic: 50, auditory: 80, text: 30 };
 
-  // ===== COVER PAGE =====
-  // Header banner
-  doc.setFillColor(teal[0], teal[1], teal[2])
-  doc.rect(0, 0, pageWidth, 50, 'F')
+  // ===== PROFESSIONAL COVER PAGE =====
+  // Header banner with rich blue gradient effect
+  doc.setFillColor(30, 64, 175) // Deep rich blue (blue-800)
+  doc.rect(0, 0, pageWidth, 60, 'F')
+  
+  // Subtle lighter blue overlay for depth
+  doc.setFillColor(59, 130, 246, 0.15) // Light blue overlay
+  doc.rect(0, 0, pageWidth, 60, 'F')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
-  doc.setFontSize(24)
-  doc.text(`${childName}'s Learning Journey`, pageWidth/2, 20, { align: 'center' })
+  doc.setFontSize(28)
+  doc.text(`${childName}'s Learning Profile`, pageWidth/2, 25, { align: 'center' })
   
   doc.setFontSize(16)
-  doc.text('Personalized Learning Guide', pageWidth/2, 32, { align: 'center' })
+  doc.text('Comprehensive Learning Assessment Report', pageWidth/2, 40, { align: 'center' })
   
+  doc.setFont('helvetica', 'normal')
   doc.setFontSize(12)
-  doc.text('Vedyx Learning Assessment Center', pageWidth/2, 42, { align: 'center' })
+  doc.text('Vedyx Learning Assessment Center', pageWidth/2, 52, { align: 'center' })
 
-  yPos = 70
+  yPos = 80
 
-  // Hero insight box
+  // Executive Summary Box
   doc.setTextColor(0, 0, 0)
   addInsightBox(
-    `THE DISCOVERY\n\n${profile.superpower}\n\nThis isn't just a "learning style" - it's ${childName}'s natural intelligence at work.`,
-    lightTeal,
-    teal
+    `EXECUTIVE SUMMARY\n\n${profile.superpower}\n\nAssessment shows ${childName} performs at the ${percentile}th percentile in ${profile.profileType.toLowerCase()} processing, indicating this as their primary learning strength.`,
+    lightBlue,
+    primaryBlue
   )
 
-  // Why school feels hard
-  addColoredHeader('Why Traditional School Feels Hard', coral)
-  addInsightBox(profile.whyStruggles, lightCoral, coral)
-
-  // What this means for your child
-  addColoredHeader('What This Means for Your Family', teal)
+  // Assessment Methodology
+  addProfessionalHeader('Assessment Methodology', primaryBlue)
   
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(11)
-  const meaningLines = doc.splitTextToSize(profile.whatThisMeans, pageWidth - 2 * margin)
-  doc.text(meaningLines, margin, yPos)
-  yPos += meaningLines.length * 6 + 15
+  const methodologyText = `This assessment utilizes a multi-dimensional framework based on established learning science research. ${childName}'s responses were analyzed across four key domains: visual-spatial, kinesthetic-tactile, auditory-linguistic, and analytical-sequential processing. The assessment incorporates principles from Universal Design for Learning (UDL) and cognitive load theory to identify optimal learning conditions.`
+  const methodologyLines = doc.splitTextToSize(methodologyText, pageWidth - 2 * margin)
+  doc.text(methodologyLines, margin, yPos)
+  yPos += methodologyLines.length * 6 + 20
+
+  // Score Breakdown with explanation
+  addProfessionalHeader('Learning Profile Analysis', accentOrange)
+  
+  // Add explanation before the chart
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+  const explanationText = `${childName}'s assessment reveals their strongest learning processing channels. Higher scores indicate more natural and effective learning pathways.`
+  const explanationLines = doc.splitTextToSize(explanationText, pageWidth - 2 * margin)
+  doc.text(explanationLines, margin, yPos)
+  yPos += explanationLines.length * 6 + 15
+  
+  addScoreChart(percentiles)
+  
+  // Add brief style definitions
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  doc.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2])
+  const stylesText = `Learning Styles: Visual (charts/diagrams), Kinesthetic (movement/hands-on), Auditory (listening/discussion), Text (reading/writing)`
+  const stylesLines = doc.splitTextToSize(stylesText, pageWidth - 2 * margin)
+  doc.text(stylesLines, margin, yPos)
+  yPos += stylesLines.length * 6 + 10
 
   checkPageBreak()
 
-  // ===== STRATEGIES PAGE =====
-  addColoredHeader('Strategies You Can Start Using Today', teal)
+  // ===== PAGE 2: DETAILED FINDINGS =====
+  doc.addPage()
+  yPos = margin + 10
 
-  profile.homeStrategies.forEach((strategy: string) => {
-    // If your strategies have emojis or prefixes, strip them here
-    const parts = strategy.split(' ')
-    const content = parts.slice(1).join(' ') // remove emoji/prefix if needed
+  addProfessionalHeader('Why Traditional School Feels Challenging', accentOrange)
+  addInsightBox(profile.whyStruggles, lightOrange, accentOrange)
+
+  addProfessionalHeader('Understanding ' + childName + "'s Learning Strengths", successGreen)
   
-    // Use a bullet character instead of repeating "At Home"
-    addActionableStrategy('•', content, '')  
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  const strengthsText = `${profile.whatThisMeans}\n\nKey Strengths: ${profile.strengthsExamples}`
+  const strengthsLines = doc.splitTextToSize(strengthsText, pageWidth - 2 * margin)
+  doc.text(strengthsLines, margin, yPos)
+  yPos += strengthsLines.length * 6 + 20
+
+  // Research Background
+  addProfessionalHeader('Research Foundation', mediumGray)
   
-    checkPageBreak(25)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  const researchLines = doc.splitTextToSize(profile.researchBackground, pageWidth - 2 * margin)
+  doc.text(researchLines, margin, yPos)
+  yPos += researchLines.length * 6 + 20
+
+  // ===== PAGE 3: HOME STRATEGIES =====
+  doc.addPage()
+  yPos = margin + 10
+
+  addProfessionalHeader('Evidence-Based Home Strategies', primaryBlue)
+
+  profile.homeStrategies.forEach((strategy, index) => {
+    checkPageBreak(15)
+    
+    // Professional bullet styling
+    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
+    doc.circle(margin + 5, yPos + 3, 2, 'F')
+    
+    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(11)
+    const lines = doc.splitTextToSize(strategy, pageWidth - 2 * margin - 15)
+    doc.text(lines, margin + 15, yPos + 5)
+    
+    yPos += lines.length * 6 + 8
   })
 
-  checkPageBreak(40)
-
-  // School advocacy section
-  addColoredHeader('Supporting ' + childName + ' at School', coral)
-  
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(11)
-  const schoolLines = doc.splitTextToSize(profile.schoolAdvocacy, pageWidth - 2 * margin)
-  doc.text(schoolLines, margin, yPos)
-  yPos += schoolLines.length * 6 + 15
-
-  {/*// Teacher conversation starter box
-  addInsightBox(
-    `TEACHER CONVERSATION STARTER\n\n"Hi [Teacher's name], we recently had ${childName} assessed and learned they're a ${(data.profile?.primaryDomain || 'visual').toLowerCase()} learner. Could we chat about some simple accommodations that might help them succeed in your classroom?"`,
-    [245, 245, 255], // Very light blue
-    [147, 197, 253]  // Light blue border
-  )*/}
-
-  checkPageBreak(60)
-
-  // Warning signs section
-  addColoredHeader('When to Seek Additional Support', [251, 146, 60]) // Orange
-
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(11)
-  const warningText = `Consider consulting with your school's learning specialist or an educational psychologist if:\n\n${profile.redFlags}\n\nRemember: This assessment identifies learning preferences, not learning disabilities. Professional evaluation may be needed for comprehensive support.`
-  const warningLines = doc.splitTextToSize(warningText, pageWidth - 2 * margin)
-  doc.text(warningLines, margin, yPos)
-  yPos += warningLines.length * 6 + 20
-
-  // Success timeline
-  checkPageBreak(40)
-  addColoredHeader('Your 30-Day Success Timeline', teal)
+  // Implementation Timeline
+  checkPageBreak(50)
+  addProfessionalHeader('30-Day Implementation Timeline', successGreen)
 
   const timeline = [
-    "Week 1: Try 1-2 strategies that feel most natural for your family",
-    "Week 2: Share insights with " + childName + "'s teachers using our conversation guide", 
-    "Week 3: Look for small improvements in homework time or attitude toward learning",
-    "Week 4: Adjust strategies based on what's working and celebrate progress"
+    { week: "Week 1", task: "Select 2-3 strategies that align with your family's routine", focus: "Start small and build confidence" },
+    { week: "Week 2", task: "Implement chosen strategies consistently", focus: "Document what works and what doesn't" },
+    { week: "Week 3", task: "Monitor progress and adjust approaches as needed", focus: "Look for improvements in attitude and engagement" },
+    { week: "Week 4", task: "Evaluate overall progress and celebrate successes", focus: "Plan for continued implementation" }
   ]
 
   timeline.forEach((item, index) => {
-    addActionableStrategy(`Week ${index + 1}`, item, "*")
-    checkPageBreak(20)
+    checkPageBreak(25)
+    
+    // Week header
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.setTextColor(successGreen[0], successGreen[1], successGreen[2])
+    doc.text(item.week, margin, yPos)
+    
+    // Task
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(11)
+    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+    const taskLines = doc.splitTextToSize(item.task, pageWidth - 2 * margin - 60)
+    doc.text(taskLines, margin + 60, yPos)
+    
+    // Focus
+    doc.setFont('helvetica', 'italic')
+    doc.setFontSize(10)
+    doc.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2])
+    const focusLines = doc.splitTextToSize(`Focus: ${item.focus}`, pageWidth - 2 * margin - 60)
+    doc.text(focusLines, margin + 60, yPos + taskLines.length * 6 + 3)
+    
+    yPos += Math.max(taskLines.length * 6, 15) + focusLines.length * 6 + 10
   })
 
-  // Bottom encouragement
-  checkPageBreak(30)
+  // ===== PAGE 4: PROFESSIONAL SUPPORT =====
+  doc.addPage()
+  yPos = margin + 10
+
+  addProfessionalHeader('When to Consider Additional Support', accentOrange)
+
   addInsightBox(
-    `REMEMBER\n\n${childName} is already smart, creative, and capable. These strategies simply help them show their brilliance in ways that traditional schooling recognizes.\n\nYou're not fixing anything - you're unlocking potential that was always there.`,
-    [252, 247, 255], // Very light purple
-    [168, 85, 247]   // Purple border
+    `PROFESSIONAL CONSULTATION INDICATORS\n\nConsider consulting with your school's learning specialist or an educational psychologist if you observe:\n\n- ${profile.redFlags}\n- Strategies show no improvement after 6-8 weeks of consistent implementation\n- Significant emotional distress related to learning\n- Widening gap between ability and performance\n\nREMEMBER: This assessment identifies learning preferences and educational strategies. It is not a clinical diagnosis or substitute for professional psychological evaluation when comprehensive support is needed.`,
+    lightOrange,
+    accentOrange
   )
 
-  // Footer
+  // Final encouragement
+  checkPageBreak(60)
+  addInsightBox(
+    `REMEMBER\n\n${childName} is already intelligent, creative, and capable. These strategies simply help them demonstrate their brilliance in ways that traditional schooling recognizes.\n\nYou're not fixing anything - you're unlocking potential that was always there.\n\nEvery small step forward is progress worth celebrating.`,
+    lightGreen,
+    successGreen
+  )
+
+  // Professional footer
   doc.setFontSize(10)
   doc.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2])
-  doc.text('Report created by Vedyx Learning Assessment Center', pageWidth/2, pageHeight - 15, { align: 'center' })
-  doc.text(`For ${childName} • Generated on ${new Date().toLocaleDateString()}`, pageWidth/2, pageHeight - 8, { align: 'center' })
+  doc.text('Report prepared by Vedyx Learning Assessment Center', pageWidth/2, pageHeight - 20, { align: 'center' })
+  doc.text(`Personalized for ${childName} • Generated ${new Date().toLocaleDateString()}`, pageWidth/2, pageHeight - 12, { align: 'center' })
+  doc.text('Evidence-based strategies for neurodivergent learners', pageWidth/2, pageHeight - 4, { align: 'center' })
   
   return new Uint8Array(doc.output('arraybuffer'))
 }
 
-// UPDATED EMAIL BODY (Remove clinical psychology references)
+// ENHANCED EMAIL BODY - HYBRID APPROACH
 export function generateEmailBody(childName: string, reportData: ReportData): string {
   const profile = reportData.profile || {};
   const percentiles = reportData.percentiles || {};
   const primaryDomain = profile.primaryDomain || 'balanced';
   const percentile = profile.percentile || 70;
   
-  // Generate personalized insights based on learning profile
   const getProfileInsights = (domain: string): ProfileInsights => {
     const insights: InsightsMap = {
       visual: {
         profileType: "Visual-Spatial Learner",
-        translation: "Excels when information is presented through pictures, diagrams, and visual organization",
-        example: "understand directions better when you show them charts or draw simple diagrams",
-        mismatch: "reading dense text and listening to long verbal explanations",
-        strengths: "visual patterns, spatial relationships, and graphic organization",
-        quickAction: `Create a simple visual checklist for ${childName}'s homework routine with checkboxes they can mark off`
+        translation: "Excels when information is presented through charts, diagrams, and visual organization",
+        parentTip: "Try mind maps and colorful study charts tonight - many parents see engagement improve within days!"
       },
       kinesthetic: {
-        profileType: "Hands-On Learner",
-        translation: "Learns best through physical interaction, movement, and hands-on experiences", 
-        example: "seem to understand concepts better when they can touch, build, or act things out",
-        mismatch: "sitting still for long periods and learning through worksheets alone",
-        strengths: "experiential learning, physical problem-solving, and learning through movement",
-        quickAction: `Let ${childName} stand, pace, or use a fidget tool during homework time — movement actually helps them focus`
+        profileType: "Kinesthetic-Tactile Learner", 
+        translation: "Learns best through movement, hands-on activities, and physical engagement",
+        parentTip: "Try adding movement breaks every 15 minutes during homework - you might be amazed at the difference!"
       },
       auditory: {
         profileType: "Auditory-Linguistic Learner",
-        translation: "Excels when information is presented through discussion, storytelling, and verbal explanation",
-        example: "remember stories and instructions better when you talk through them together",
-        mismatch: "reading silently and processing visual information without verbal context",
-        strengths: "verbal processing, listening comprehension, and learning through discussion",
-        quickAction: `Read homework instructions aloud and encourage ${childName} to explain their thinking verbally`
+        translation: "Excels when information is presented through discussion, storytelling, and verbal explanation", 
+        parentTip: "Try reading homework instructions aloud and encourage them to talk through problems - many parents see improvements within days!"
       },
       text: {
-        profileType: "Analytical-Sequential Learner", 
-        translation: "Thrives with structured, written information and learns best through reading and independent analysis",
-        example: "prefer to read instructions rather than have them explained, and work through problems step-by-step",
-        mismatch: "group activities and verbal instructions without written backup",
-        strengths: "independent analysis, written processing, and logical sequencing",
-        quickAction: `Provide written summaries of verbal instructions and create a quiet, organized study space for ${childName}`
+        profileType: "Analytical-Sequential Learner",
+        translation: "Thrives with detailed written instructions, systematic approaches, and independent study",
+        parentTip: "Try providing step-by-step written guides and quiet study time - this simple shift often makes homework much easier!"
       }
     };
-  
-    // Type-safe way to access insights (same pattern as getProfileContent)
-    const validDomains: LearningDomain[] = ['visual', 'kinesthetic', 'auditory', 'text'];
-    const safeDomain = validDomains.includes(domain as LearningDomain) 
-      ? (domain as LearningDomain) 
-      : 'visual';
     
-    return insights[safeDomain];
+    return insights[domain as LearningDomain] || insights.visual;
   };
-  
+
   const insights = getProfileInsights(primaryDomain);
-  
+
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+      <title>${childName}'s Learning Profile is Ready</title>
       <style>
         body { 
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
           line-height: 1.7; 
-          color: #1e293b; 
-          margin: 0; 
-          padding: 0;
-          background: #f6f6f6;
-          font-size: 16px;
-        }
-        .container { 
+          color: #334155; 
           max-width: 600px; 
           margin: 0 auto; 
-          background: #ffffff;
+          padding: 20px;
+          background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        .container { 
+          background: white; 
+          border-radius: 16px; 
+          padding: 0; 
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+          overflow: hidden;
         }
         .header { 
-          background: #3BB9B0;
+          background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%); 
           color: white; 
-          padding: 30px; 
+          padding: 40px 30px; 
           text-align: center;
         }
         .header h1 { 
-          font-family: 'Montserrat', sans-serif;
           margin: 0; 
-          font-size: 24px; 
+          font-size: 28px; 
           font-weight: 700;
-          letter-spacing: -0.3px;
+          margin-bottom: 8px;
+        }
+        .header p { 
+          margin: 0; 
+          opacity: 0.95; 
+          font-size: 18px;
+          font-weight: 300;
         }
         .content { 
-          padding: 40px 30px;
+          padding: 40px 35px;
+        }
+        .opening { 
           font-size: 16px;
+          margin-bottom: 30px;
+          color: #475569;
         }
-        .greeting {
-          font-size: 16px;
-          margin-bottom: 20px;
+        .discovery-section { 
+          background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); 
+          border-left: 5px solid #10b981; 
+          padding: 30px; 
+          margin: 30px 0; 
+          border-radius: 12px;
         }
-        .hook {
-          margin: 25px 0;
-          font-size: 16px;
+        .discovery-section h2 { 
+          color: #059669; 
+          margin: 0 0 15px 0; 
+          font-size: 22px; 
+          font-weight: 700;
         }
-        .profile-section {
-          background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-          border: 1px solid #cbd5e1;
-          border-radius: 10px;
-          padding: 25px;
-          margin: 30px 0;
-          text-align: center;
-        }
-        .profile-section h3 {
-          font-family: 'Montserrat', sans-serif;
-          color: #0f172a;
-          margin-top: 0;
+        .profile-type {
           font-size: 20px;
           font-weight: 600;
-          margin-bottom: 15px;
+          color: #047857;
+          margin: 15px 0 10px 0;
         }
-        .profile-translation {
+        .translation {
           font-size: 16px;
-          margin-bottom: 15px;
-        }
-        .profile-example {
+          color: #065f46;
           font-style: italic;
-          color: #3730a3;
-          background: #eef2ff;
+          margin-bottom: 20px;
+        }
+        .percentile-highlight {
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          border: 2px solid #f59e0b;
+          padding: 20px;
+          border-radius: 10px;
+          text-align: center;
+          margin: 20px 0;
+        }
+        .percentile-number {
+          font-size: 36px;
+          font-weight: 900;
+          color: #d97706;
+          margin: 0;
+        }
+        .percentile-label {
+          color: #92400e;
+          font-size: 14px;
+          font-weight: 600;
+          margin-top: 5px;
+        }
+        .insight-box { 
+          background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%); 
+          border-left: 5px solid #8b5cf6; 
+          padding: 25px; 
+          margin: 25px 0; 
+          border-radius: 12px;
+        }
+        .insight-box h3 { 
+          color: #7c3aed; 
+          margin: 0 0 15px 0; 
+          font-size: 18px; 
+          font-weight: 600;
+        }
+        .try-tonight {
+          background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+          border-left: 5px solid #ea580c;
+          padding: 25px;
+          margin: 25px 0;
+          border-radius: 12px;
+        }
+        .try-tonight h3 {
+          color: #ea580c;
+          margin: 0 0 15px 0;
+          font-size: 20px;
+          font-weight: 700;
+        }
+        .try-tonight .tip {
+          font-size: 16px;
+          font-weight: 600;
+          color: #c2410c;
+          background: rgba(255, 255, 255, 0.7);
           padding: 15px;
           border-radius: 8px;
+          border-left: 3px solid #ea580c;
           margin: 15px 0;
+        }
+        .pdf-section { 
+          background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%); 
+          padding: 30px; 
+          border-radius: 12px; 
+          margin: 30px 0;
+          border: 2px solid #3b82f6;
+        }
+        .pdf-section h3 { 
+          color: #1d4ed8; 
+          margin: 0 0 20px 0; 
+          font-size: 22px; 
+          font-weight: 700;
+          text-align: center;
+        }
+        .pdf-contents { 
+          background: white; 
+          padding: 20px; 
+          border-radius: 10px; 
+          border: 1px solid #bfdbfe;
+          margin-top: 20px;
+        }
+        .pdf-contents h4 { 
+          color: #1e40af; 
+          margin: 0 0 15px 0; 
+          font-size: 16px; 
+          font-weight: 600;
+        }
+        .pdf-contents ul { 
+          margin: 0; 
+          padding-left: 20px; 
+          color: #374151;
+        }
+        .pdf-contents li { 
+          margin: 8px 0; 
           font-size: 15px;
         }
-        .struggle-section {
-          background: #fefbf3;
-          border-left: 4px solid #f59e0b;
+        .reassurance {
+          background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
           padding: 25px;
+          border-radius: 12px;
+          border-left: 5px solid #22c55e;
           margin: 30px 0;
-          border-radius: 0 8px 8px 0;
+          text-align: center;
         }
-        .struggle-section h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: #92400e;
-          margin-top: 0;
+        .key-message {
           font-size: 18px;
           font-weight: 600;
-          margin-bottom: 12px;
-        }
-        .superpower-section {
-          background: #f0fdf4;
-          border-left: 4px solid #22c55e;
-          padding: 25px;
-          margin: 30px 0;
-          border-radius: 0 8px 8px 0;
-        }
-        .superpower-section h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: #166534;
-          margin-top: 0;
-          font-size: 18px;
-          font-weight: 600;
-          margin-bottom: 12px;
-        }
-        .quick-win {
-          background: #faf5ff;
-          border: 1px solid #a855f7;
-          border-radius: 10px;
-          padding: 25px;
-          margin: 30px 0;
-        }
-        .quick-win h4 {
-          font-family: 'Montserrat', sans-serif;
-          color: #7c2d12;
-          margin-top: 0;
-          font-size: 18px;
-          font-weight: 600;
-          margin-bottom: 12px;
-        }
-        .pdf-reminder {
-          background: #f0fdf4;
-          border: 1px solid #22c55e;
-          border-radius: 10px;
-          padding: 25px;
-          margin: 35px 0;
-          text-align: center;
-        }
-        .pdf-reminder h3 {
-          font-family: 'Montserrat', sans-serif;
-          color: #166534;
-          margin-top: 0;
-          font-size: 20px;
-          font-weight: 600;
-          margin-bottom: 15px;
-        }
-        .cta-section {
-          background: linear-gradient(135deg, #1e293b, #334155);
-          color: white;
-          padding: 35px 30px;
-          text-align: center;
-          margin: 35px 0;
-          border-radius: 10px;
-        }
-        .cta-section h3 {
-          font-family: 'Montserrat', sans-serif;
-          font-size: 22px;
-          font-weight: 600;
-          margin-bottom: 20px;
-          margin-top: 0;
-        }
-        .cta-button {
-          display: inline-block;
-          background: #3BB9B0;
-          color: white;
-          padding: 16px 32px;
-          text-decoration: none;
-          border-radius: 8px;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 600;
-          font-size: 17px;
-          margin: 25px 0 15px 0;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(59, 185, 176, 0.3);
-        }
-        .cta-button:hover {
-          background: #339B94;
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(59, 185, 176, 0.4);
-        }
-        .offer-block {
-          background: #FFE9D6;
-          border: 1px solid #FF7A59;
-          border-radius: 10px;
-          padding: 20px;
-          margin: 20px 0;
-          text-align: center;
-        }
-        .offer-block p {
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 600;
-          color: #1e293b;
-          margin: 0;
-          font-size: 15px;
-        }
-        .footer {
-          background: #f6f6f6;
-          padding: 30px;
-          color: #64748b;
-          font-size: 14px;
-          text-align: center;
-          border-top: 1px solid #e2e8f0;
-        }
-        .footer-logo {
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 600;
-          color: #1e293b;
+          color: #15803d;
           margin-bottom: 10px;
         }
-        h4 {
-          margin-bottom: 12px;
+        .support-message {
+          color: #166534;
+          font-size: 16px;
         }
-        p {
-          margin-bottom: 16px;
+        .personal-touch { 
+          background: linear-gradient(135deg, #fefce8 0%, #fde047 100%); 
+          border: 2px solid #eab308; 
+          padding: 25px; 
+          border-radius: 12px; 
+          margin: 30px 0;
+          text-align: center;
         }
-        ul {
-          padding-left: 0;
-          margin: 18px 0;
-          list-style: none;
+        .personal-touch p { 
+          margin: 0; 
+          color: #a16207; 
+          font-size: 16px;
+          font-weight: 600;
         }
-        li {
+        .signature { 
+          margin-top: 40px; 
+          padding-top: 30px; 
+          border-top: 2px solid #e2e8f0;
+        }
+        .signature-name {
+          font-weight: 700;
+          color: #1e40af;
+          font-size: 18px;
+          margin-bottom: 5px;
+        }
+        .signature-title {
+          color: #64748b;
+          font-style: italic;
+          margin-bottom: 20px;
+        }
+        .ps-section {
+          background: #f8fafc;
+          padding: 20px;
+          border-radius: 10px;
+          border-left: 4px solid #06b6d4;
+          margin-top: 25px;
+          font-style: italic;
+        }
+        .footer { 
+          background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); 
+          padding: 30px; 
+          text-align: center; 
+          margin-top: 30px;
+        }
+        .footer-logo { 
+          font-weight: 700; 
+          color: #0f172a; 
+          font-size: 18px;
           margin-bottom: 8px;
-          font-size: 15px;
-          padding-left: 20px;
-          position: relative;
         }
-        li:before {
-          content: "✅";
-          position: absolute;
-          left: 0;
+        .footer p { 
+          margin: 5px 0; 
+          color: #64748b; 
+          font-size: 14px;
         }
-        .results-list li:before {
-          content: "📈";
-        }
-        .section-break {
-          border-top: 1px solid #e2e8f0;
-          margin: 35px 0;
-        }
-        @media (max-width: 600px) {
-          .content {
-            padding: 30px 20px;
+        @media (max-width: 600px) { 
+          .container { 
+            margin: 10px; 
           }
-          .header {
-            padding: 25px 20px;
-          }
-          .header h1 {
-            font-size: 20px;
+          .content { 
+            padding: 30px 25px; 
           }
         }
       </style>
@@ -706,106 +807,88 @@ export function generateEmailBody(childName: string, reportData: ReportData): st
     <body>
       <div class="container">
         <div class="header">
-          <h1>Your Personalised Learning Report Is Ready</h1>
+          <h1>Your Personalized Learning Report Is Ready</h1>
+          <p>We found the answer for ${childName}</p>
         </div>
         
         <div class="content">
-          <div class="greeting">
+          <div class="opening">
             <p>Hi there,</p>
-          </div>
-          
-          <div class="hook">
+            
             <p>Remember when you clicked our assessment wondering: <em>"Why does my smart child struggle in school?"</em></p>
+            
             <p>We've found the answer for ${childName}, and it's actually <strong>great news</strong>.</p>
           </div>
           
-          <div class="profile-section">
-            <h3>🧠 ${childName} is a ${insights.profileType}</h3>
-            <div class="profile-translation">
-              <p><strong>Translation:</strong> ${insights.translation}</p>
-            </div>
-            <div class="profile-example">
-              👉 Have you noticed ${childName} ${insights.example}?
-            </div>
-          </div>
-          
-          <div class="struggle-section">
-            <h4>📚 Why School Feels Hard for ${childName}</h4>
-            <p>Many lessons rely on ${insights.mismatch}, which doesn't align with how ${childName}'s brain processes information best.</p>
-            <p><strong>💡 Your child isn't broken. The method just doesn't match their brain.</strong></p>
-          </div>
-          
-          <div class="superpower-section">
-            <h4>⭐ ${childName}'s Learning Superpower</h4>
-            <p>${childName} shows strong ${insights.strengths} ${percentile >= 70 ? `(${percentile}th percentile)` : ''}. This means they thrive when learning through ${primaryDomain}-based approaches.</p>
-          </div>
-          
-          <div class="quick-win">
-            <h4>🚀 One Thing You Can Try Today</h4>
-            <p><strong>Try this tonight:</strong> ${insights.quickAction}</p>
-            <p>Many parents see improvements within days of making this simple shift!</p>
-          </div>
-          
-          <div class="section-break"></div>
-          
-          <div style="text-align: left; margin: 16px 0;">
-            <h3>📄 Your Complete Learning Guide Is Attached</h3>
-            <p>Inside, you'll find:</p>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-              <li style="margin-bottom: 6px;">✅ Specific homework strategies</li>
-              <li style="margin-bottom: 6px;">✅ Conversation guide for teachers</li>
-              <li style="margin-bottom: 6px;">✅ Red flags + when to seek extra support</li>
-              <li style="margin-bottom: 6px;">✅ Long-term success plan based on ${childName}'s strengths</li>
-            </ul>
-          </div>
-          
-          <div style="background-color:#FFF8F3; border-radius:12px; padding:20px; margin:24px 0; text-align:left;">
-            <h3 style="margin-top:0;">🎮 The Next Step: Learning That Fits ${childName}</h3>
+          <div class="discovery-section">
+            <h2>The Key Discovery</h2>
+            <div class="profile-type">${childName} is a ${insights.profileType}</div>
+            <div class="translation">${insights.translation}</div>
             
-            <p>${childName} would thrive with approaches built around their ${primaryDomain} learning strengths.</p>
-            
-            <p>That’s why we created <strong>Vedyx Leap</strong> - a literacy program designed specifically for learners like ${childName}, turning learning struggles into successes.</p>
-            
-            <p><strong>What families are seeing:</strong></p>
-            <ul style="list-style:none; padding:0; margin:0;">
-              <li style="margin-bottom:6px;">✅ 87% of kids show more reading engagement in 2 weeks</li>
-              <li style="margin-bottom:6px;">✅ Average +1.2 grade levels in just 3 months</li>
-              <li style="margin-bottom:6px;">✅ Parents say kids actually <em>ask</em> to practice reading</li>
-            </ul>
-            
-            <div style="text-align:center; margin:20px 0;">
-              <a href="https://vedyx.ai?utm_source=assessment&utm_medium=email&utm_campaign=meta&profile=${primaryDomain}&child=${encodeURIComponent(childName)}"
-                style="display:inline-block; background-color:#3BB9B0; color:#fff; font-weight:bold; padding:14px 28px; border-radius:8px; text-decoration:none;">
-                See How Vedyx Leap Works for ${insights.profileType}s
-              </a>
-            </div>
-            
-            <div style="background-color:#FFE9D6; border-radius:8px; padding:12px; text-align:center; font-size:14px;">
-              🎁 Early access offer for assessment participants
+            <div class="percentile-highlight">
+              <div class="percentile-number">${percentile}th</div>
+              <div class="percentile-label">Percentile in Primary Learning Domain</div>
             </div>
           </div>
-
           
-          <div class="section-break"></div>
+          <div class="insight-box">
+            <h3>Why School Feels Hard for ${childName}</h3>
+            <p>Many lessons rely on teaching methods that don't align with how ${childName}'s brain processes information best. Traditional classrooms often use a one-size-fits-all approach that can leave brilliant kids feeling confused or behind.</p>
+            
+            <p><strong>Your child isn't broken. The method just doesn't match their brain.</strong></p>
+          </div>
           
-          <p>Questions about ${childName}'s report? Just hit reply - I personally read every email.</p>
+          <div class="try-tonight">
+            <h3>One Thing You Can Try Tonight</h3>
+            <div class="tip">${insights.parentTip}</div>
+            <p>It's amazing how small shifts can make such a big difference in your child's confidence and engagement.</p>
+          </div>
           
-          <p>Here to support ${childName}'s learning journey,</p>
-          <p><strong>Sarah Chen</strong><br>
-          <em>Child Learning Specialist</em><br>
-          <em>Vedyx Learning Team</em></p>
+          <div class="pdf-section">
+            <h3>Your Complete Learning Guide Is Attached</h3>
+            <p>This isn't just another generic report - it's a personalized roadmap created specifically for ${childName}'s learning strengths.</p>
+            
+            <div class="pdf-contents">
+              <h4>Inside Your 4-Page Report:</h4>
+              <ul>
+                <li><strong>Assessment Methodology:</strong> How we identified ${childName}'s unique learning profile</li>
+                <li><strong>Visual Score Analysis:</strong> Clear breakdown of learning strengths and preferences</li>
+                <li><strong>Evidence-Based Home Strategies:</strong> 12+ specific techniques you can start using today</li>
+                <li><strong>30-Day Implementation Plan:</strong> Week-by-week guide to see real progress</li>
+                <li><strong>When to Seek Support:</strong> Professional guidance on next steps if needed</li>
+              </ul>
+            </div>
+          </div>
           
-          <p style="font-style: italic; color: #64748b; margin-top: 25px; font-size: 15px;">
-            <strong>P.S.</strong> Over the next few days, I'll share success stories and simple strategies for ${insights.profileType.toLowerCase()}s like ${childName}. Keep an eye on your inbox!
-          </p>
+          <div class="reassurance">
+            <div class="key-message">The Next Step: Learning That Fits ${childName}</div>
+            <div class="support-message">Understanding your child's learning profile is the first step toward unlocking their potential. The strategies in your report have helped thousands of families transform their children's educational experience.</div>
+          </div>
+          
+          <p>I know how overwhelming it can feel when your bright child struggles in school. But once you understand ${childName}'s natural learning style, everything starts to make sense - and more importantly, gets easier.</p>
+          
+          <div class="personal-touch">
+            <p>Questions about ${childName}'s report? Just hit reply - I personally read and respond to every email. I'd love to hear how these strategies work for your family!</p>
+          </div>
+          
+          <div class="signature">
+            <p>Here to support ${childName}'s learning journey,</p>
+            
+            <div class="signature-name">Sarah Chen</div>
+            <div class="signature-title">Educational Learning Specialist<br>Vedyx Learning Assessment Center</div>
+            
+            <div class="ps-section">
+              <strong>P.S.</strong> Over the next few days, I'll share success stories and additional strategies for ${insights.profileType.toLowerCase()}s like ${childName}. Keep an eye on your inbox!
+            </div>
+          </div>
         </div>
         
         <div class="footer">
           <div class="footer-logo">Vedyx Learning Assessment Center</div>
-          <p>Helping neurodivergent kids thrive since 2023</p>
+          <p>Evidence-based learning strategies for neurodivergent students</p>
           <p style="margin-top: 20px;">
-            <a href="#" style="color: #64748b; text-decoration: none;">Unsubscribe</a> | 
-            <a href="#" style="color: #64748b; text-decoration: none;">Update Preferences</a>
+            <a href="#" style="color: #64748b; text-decoration: none;">Update Preferences</a> | 
+            <a href="#" style="color: #64748b; text-decoration: none;">Contact Support</a>
           </p>
         </div>
       </div>
